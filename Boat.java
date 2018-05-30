@@ -1,7 +1,7 @@
 public class Boat extends Unit {
     Unit unit;
-    Boat (int r, int c, Unit unit, String tribe){
-        super (r, c, 2, 3, unit.getCurrHealth(), 1, 2, unit.getTribe());
+    Boat (int r, int c, Unit unit){
+        super (r, c, 2, 3, unit.getCurrHealth(), 1, 2, unit.getTribe(), unit.getCity());
         this.unit = unit;
     }
 
@@ -11,7 +11,7 @@ public class Boat extends Unit {
         unit.setCurrHealth(health);
     }
 
-    @Override
+@Override
     public void levelUp() {
         this.setAttack(this.getAttack()+5);
     }

@@ -1,4 +1,5 @@
-public class City {
+//make iterator
+public class City{
     private int r;
     private int c;
     private boolean capital;
@@ -8,9 +9,11 @@ public class City {
     private int currPop;
     private int currUnits;
     private int level;
-
+    private String tribe;
+    private int order;
+    private Player player;
     //Constructor
-    City(int r, int c, boolean capital){
+    City(int r, int c, boolean capital, Player player){
         this.r = r;
         this.c = c;
         this.capital = capital;
@@ -18,40 +21,8 @@ public class City {
         this.maxUnits = 2;
         this.maxPop = 2;
         this.currPop = 0;
-        this.currPop = 0;
         this.level = 1;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getR() {
-        return r;
-    }
-
-    /**
-     *
-     * @param r
-     */
-    public void setR(int r) {
-        this.r = r;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getC() {
-        return c;
-    }
-
-    /**
-     *
-     * @param c
-     */
-    public void setC(int c) {
-        this.c = c;
+        this.player = player;
     }
 
     /**
@@ -60,6 +31,22 @@ public class City {
      */
     public boolean isCapital() {
         return capital;
+    }
+
+    public int getR() {
+        return r;
+    }
+
+    public void setR(int r) {
+        this.r = r;
+    }
+
+    public int getC() {
+        return c;
+    }
+
+    public void setC(int c) {
+        this.c = c;
     }
 
     /**
@@ -164,6 +151,30 @@ public class City {
      */
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public String getTribe() {
+        return tribe;
+    }
+
+    public void setTribe(String tribe) {
+        this.tribe = tribe;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     /**

@@ -9,8 +9,9 @@ abstract public class Unit {
     private int range;
     private String tribe;
     private int killCount;
+    private City city;
 
-    Unit(int r, int c, int attack, int defense, int health, int movement, int range, String tribe){
+    Unit(int r, int c, int attack, int defense, int health, int movement, int range, String tribe, City city){
         this.r = r;
         this.c = c;
         this.attack = attack;
@@ -20,6 +21,7 @@ abstract public class Unit {
         this.movement = movement;
         this.range = range;
         this.tribe = tribe;
+        this.city = city;
     }
 
     public int getR() {
@@ -29,6 +31,8 @@ abstract public class Unit {
     public void setR(int r) {
         this.r = r;
     }
+
+    public City getCity() { return city; }
 
     public int getC() {
         return c;
