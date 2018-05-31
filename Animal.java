@@ -1,10 +1,5 @@
-public class Animal extends Item{
-    private int popIncrease;
-    private int cost;
-
-    Animal(int r, int c, String tribe){
-        super(r, c);
-        popIncrease = 1;
-        cost = 2;
+public class Animal extends Resource{
+    public Animal(int r, int c, int tribe){
+        super(r, c, 1, 2, tribe);
     }
 }

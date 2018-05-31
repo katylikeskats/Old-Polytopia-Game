@@ -1,10 +1,5 @@
-public class Fruit extends Item {
-    private int popIncrease;
-    private int cost;
-
-    Fruit(int r, int c, String tribe){
-        super(r, c);
-        popIncrease = 1;
-        cost = 2;
+public class Fruit extends Resource {
+    public Fruit(int r, int c, int tribe){
+        super(r, c, 1, 2, tribe);
     }
 }

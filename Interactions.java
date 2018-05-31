@@ -1,9 +1,13 @@
 import java.util.ArrayList;
+import java.awt.Graphics;
 
 public class Interactions {
     protected Space[][] map;
-    Interactions(Space[][] map){
+    private GameGraphics gameGraphics;
+
+    public Interactions(Space[][] map){
         this.map = map;
+        this.gameGraphics = gameGraphics; //DETERMINE IF GRAPHICS IS GONNA BE STATIC OR NOT
     }
 
     /**
@@ -23,7 +27,7 @@ public class Interactions {
     }
 
     public boolean validateMove(Unit unit, int newR, int newC){
-        return ((contains(unit.getCity().getPlayer().getTechnology(), map[newR][newC].getTerrainName())) && (newR < map.length) && (newC < map.length));
+        return ((contains(unit.getCity().getPlayer().getTechnology(), map[newR][newC].getTerrainName())) && (newR >= 0) && (newC >= 0) && (newR < map.length) && (newC < map.length) && (map[newR][newC].getUnit() == null));
     }
 
     public void move (Unit unit, int newR, int newC){
@@ -50,10 +54,10 @@ public class Interactions {
     }
 
     public void harvestItem (Player player, int r, int c){
-        if ((player.getCurrency() >= map[r][c].getTerrain().getItem().getCost()) && (contains(player.getTechnology(), map[r][c].getTerrain().getItem().getClass().getSimpleName())) &&(map[r][c].getTerrain().getItem().getCity().getTribe().equals(player.getTribe()))){
-            player.setCurrency(player.getCurrency() - map[r][c].getTerrain().getItem().getCost());
-            map[r][c].getTerrain().getItem().getCity().increasePop(map[r][c].getTerrain().getItem().getPopIncrease());
-            map[r][c].getTerrain().setItem(null);
+        if ((player.getCurrency() >= map[r][c].getResource().getCost()) && (contains(player.getTechnology(), map[r][c].getResource().getClass().getSimpleName())) &&(map[r][c].getResource().getCity().getTribe() == player.getTribe())){
+            player.setCurrency(player.getCurrency() - map[r][c].getResource().getCost());
+            map[r][c].getResource().getCity().increasePop(map[r][c].getResource().getPopIncrease());
+            map[r][c].setResource(null);
         }
     }
 
@@ -61,5 +65,17 @@ public class Interactions {
         unit.setTribe(mindbender.getTribe());
     }
 
+    public void displayOptions(int r, int c){
+        if (!map[r][c].isEmpty()){
+            if (map[r][c].containsCity()){
+                GameMapFrame.display
+            }
+            if (map[r][c].containsResource()){
 
+            }
+            if (map[r][c].containsUnit()){
+
+            }
+        }
+    }
 }

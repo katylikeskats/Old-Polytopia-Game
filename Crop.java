@@ -1,5 +1,5 @@
-public class Crop extends Item{
-    Crop(int r, int c, String tribe){
-        super(r, c, 2, 5);
+public class Crop extends Resource{
+    public Crop(int r, int c, int tribe){
+        super(r, c, 2, 5, tribe);
     }
 }

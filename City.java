@@ -9,11 +9,11 @@ public class City{
     private int currPop;
     private int currUnits;
     private int level;
-    private String tribe;
+    private int tribe;
     private int order;
     private Player player;
     //Constructor
-    City(int r, int c, boolean capital, Player player){
+    public City(int r, int c, boolean capital, Player player){
         this.r = r;
         this.c = c;
         this.capital = capital;
@@ -153,11 +153,11 @@ public class City{
         this.level = level;
     }
 
-    public String getTribe() {
+    public int getTribe() {
         return tribe;
     }
 
-    public void setTribe(String tribe) {
+    public void setTribe(int tribe) {
         this.tribe = tribe;
     }
 
