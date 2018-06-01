@@ -11,9 +11,9 @@ public class Player {
     boolean[][] mask;
     private Interactions handler;
 
-    public Player(int tribe, Space[][] map){
+    public Player(int tribe, Map map){
         this.tribe = tribe;
-        mask = new boolean[map.length][map.length];
+        mask = new boolean[map.getMap().length][map.getMap().length];
         handler = new Interactions(map);
     }
 
