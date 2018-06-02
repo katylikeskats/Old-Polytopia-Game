@@ -2,12 +2,10 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 
 public class Interactions {
-    private Map map;
-    private GameGraphics gameGraphics;
+    private MapUpdated map;
 
-    public Interactions(Map map){
+    public Interactions(MapUpdated map){
         this.map = map;
-        this.gameGraphics = gameGraphics; //DETERMINE IF GRAPHICS IS GONNA BE STATIC OR NOT
     }
 
     /**
