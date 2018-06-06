@@ -54,7 +54,11 @@ class Map {
         }
         expandLand(randR, randC, 0, lowerR, higherR, lowerC, higherC);
       } while (!checkCoverage(i));
+      
     }
+    
+    //Adding water
+    addWater();
     
     //Adding Cities
     addCities();
@@ -106,32 +110,40 @@ class Map {
     if (quartile == 0) {
       for (int i = 0; i < MAP_LENGTH/2; i++) {
         for (int j = 0; j < MAP_LENGTH/2; j++) {
-          if (tileMap[i][j].getTerrain() instanceof Grass) {
-            numLandTiles++;
+          if (tileMap[i][j] != null) {
+            if (tileMap[i][j].getTerrain() instanceof Grass) {
+              numLandTiles++;
+            }
           }
         }
       }
     } else if (quartile == 1) {
-      for (int i = MAP_LENGTH/2; i < MAP_LENGTH; i++) {
-        for (int j = 0; j < MAP_LENGTH/2; j++) {
-          if (tileMap[i][j].getTerrain() instanceof Grass) {
-            numLandTiles++;
+      for (int i = 0; i < MAP_LENGTH/2; i++) {
+        for (int j = MAP_LENGTH/2; j < MAP_LENGTH; j++) {
+          if (tileMap[i][j] != null) {
+            if (tileMap[i][j].getTerrain() instanceof Grass) {
+              numLandTiles++;
+            }
           }
         }
       }
     } else if (quartile == 2) {
-      for (int i = 0; i < MAP_LENGTH/2; i++) {
-        for (int j = MAP_LENGTH/2; j < MAP_LENGTH; j++) {
-          if (tileMap[i][j].getTerrain() instanceof Grass) {
-            numLandTiles++;
+      for (int i = MAP_LENGTH/2; i < MAP_LENGTH; i++) {
+        for (int j = 0; j < MAP_LENGTH/2; j++) {
+          if (tileMap[i][j] != null) {
+            if (tileMap[i][j].getTerrain() instanceof Grass) {
+              numLandTiles++;
+            }
           }
         }
       }
     } else {
       for (int i = MAP_LENGTH/2; i < MAP_LENGTH; i++) {
         for (int j = MAP_LENGTH/2; j < MAP_LENGTH; j++) {
-          if (tileMap[i][j].getTerrain() instanceof Grass) {
-            numLandTiles++;
+          if (tileMap[i][j] != null) {
+            if (tileMap[i][j].getTerrain() instanceof Grass) {
+              numLandTiles++;
+            }
           }
         }
       }
@@ -160,9 +172,11 @@ class Map {
   private boolean adjacentCity(int cityR, int cityC) {
     for (int i = 0; i < MAP_LENGTH; i++) {
       for (int j = 0; j < MAP_LENGTH; j++) {
-        if (tileMap[i][j].getTerrain() instanceof Grass) {
-          if (((Math.abs(cityR - i)) <= 2) && ((Math.abs(cityC - j)) <= 2)) { //Maybe change condition format
-            return true;
+        if (tileMap[i][j] != null) {
+          if (tileMap[i][j].getCity() != null) {
+            if (((Math.abs(cityR - i)) <= 2) && ((Math.abs(cityC - j)) <= 2)) { //Maybe change condition format
+              return true;
+            }
           }
         }
       }
@@ -170,13 +184,23 @@ class Map {
     return false;
   }
   
+  private void addWater() {
+    for (int i = 0; i < MAP_LENGTH; i++) {
+      for (int j = 0; j < MAP_LENGTH; j++) {
+        if (tileMap[i][j] == null) {
+          tileMap[i][j] = new Space(new Water(i, j));
+        }
+      }
+    }
+  }
+  
   private void addItems() { //Maybe too many items? Othewise it's fine
     int random3 = 0;
     for (int i = 0; i < MAP_LENGTH; i++) {
       for (int j = 0; j < MAP_LENGTH; j++) {
-        if ((tileMap[i][j].getCity() != null) && (adjacentCity(i, j))) { //Only have an item if possibly within city borders
-          random3 = (int)(Math.round(Math.random()*9));
-          if (tileMap[i][j].getTerrain() instanceof Grass) { //Land items
+        random3 = (int)(Math.round(Math.random()*9));
+        if (tileMap[i][j].getTerrain() instanceof Grass) {
+          if (adjacentCity(i, j) && tileMap[i][j].getCity() == null) { //Only have an item if possibly within city borders
             if (random3 == 0) {
               tileMap[i][j].setResource(new Fruit(i,j)); //Rep Fruit
             } else if (random3 == 1) {
@@ -186,11 +210,11 @@ class Map {
             } else if (random3 == 3) {
               tileMap[i][j].setResource(new Crop(i,j)); //Rep Crop
             }
-          } else if (tileMap[i][j] == null) {
+          }
+        } else {
+          if (adjacentCity(i, j)) {
             if (random3 < 2) {
-              tileMap[i][j] = new Space(new Water(i, j), new Fish(i, j)); //Rep fish
-            } else {
-              tileMap[i][j] = new Space(new Water(i, j));
+              tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
             }
           }
         }
