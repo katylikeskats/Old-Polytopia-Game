@@ -15,12 +15,27 @@ class GameMapFrame extends JFrame {
     static GameAreaPanel gamePanel;
     private Map map;
     private Interactions interactions;
-    static int tileDim;
+    static int tileDim; //Size of a tile (length)
     static int selectedR;
     static int selectedC;
-
+    static int selectedR2;
+    static int selectedC2;
+    static boolean unitSelected;
+    static boolean citySelected;
+    static boolean resourceSelected;
+    private boolean unitMove;
+    
     private static Image redTarget = Toolkit.getDefaultToolkit().getImage("RedTarget.png");
     private static Image greyTarget = Toolkit.getDefaultToolkit().getImage("GreyTarget.png");
+    private static Image greenCheck = Toolkit.getDefaultToolkit().getImage("transparent-green-checkmark-hi.png");
+    private static Image grassImage = Toolkit.getDefaultToolkit().getImage("Grass.png");
+    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("Water.png");
+    private static Image cityImage = Toolkit.getDefaultToolkit().getImage("City.png");
+    private static Image animalImage = Toolkit.getDefaultToolkit().getImage("Animal.png");
+    private static Image fishImage = Toolkit.getDefaultToolkit().getImage("Fish.png");
+    private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("Fruit.png");
+    private static Image treeImage = Toolkit.getDefaultToolkit().getImage("Tree.png");
+    private static Image cropImage = Toolkit.getDefaultToolkit().getImage("Crop.png");
 
     GameMapFrame(Map map) {
         super("Polytopia");
@@ -54,39 +69,77 @@ class GameMapFrame extends JFrame {
     // Inner class for the the game area - This is where all the drawing of the screen occurs
     private class GameAreaPanel extends JPanel {
         public void paintComponent(Graphics g) {
-            int currX = 1;
-            int currY = 1;
+            int currX = 1; //For later (like menu option shit)
+            int currY = 1; //For later
             super.paintComponent(g); //required
             setDoubleBuffered(true); //What is this
 
+            //Tile types
             for (int i = 0; i < map.getMap().length; i++) {
-                for (int j = 0; j < map.getMap().length; j++) {
-                    g.setColor(Color.black);
-                    if (map.getMap()[i][j].getTerrain() instanceof Water) {
-                        g.setColor(Color.blue);
-                    } if (map.getMap()[i][j].getTerrain() instanceof Grass) {
-                        g.setColor(Color.green);
-                    } if (map.getMap()[i][j].getCity() != null) {
-                        g.setColor(Color.red);
-                    }
-                    g.fillRect((tileDim*j), (tileDim*i), tileDim, tileDim);
+              for (int j = 0; j < map.getMap().length; j++) {
+                if (map.getMap()[i][j].getTerrain() instanceof Water) {
+                  g.drawImage(waterImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (map.getMap()[i][j].getTerrain() instanceof Grass) {
+                  g.drawImage(grassImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
                 }
+                if (map.getMap()[i][j].getCity() != null) {
+                  g.drawImage(cityImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                }
+              }
+            }
+            
+            //Resources
+            for (int i = 0; i < map.getMap().length; i++) {
+               for (int j = 0; j < map.getMap().length; j++) {
+                 if (map.getMap()[i][j].getResource() instanceof Fruit) {
+                   g.drawImage(fruitImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                 } else if (map.getMap()[i][j].getResource() instanceof Crop) {
+                   g.drawImage(cropImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                 } else if (map.getMap()[i][j].getResource() instanceof Fish) {
+                   g.drawImage(fishImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                 } else if (map.getMap()[i][j].getResource() instanceof Forest) {
+                   g.drawImage(treeImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                 } else if (map.getMap()[i][j].getResource() instanceof Animal) {
+                   g.drawImage(animalImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                 }
+               }
             }
 
             //CHECK FOR TARGET AND MENU SHIT for each unit clicked on?
-            //if (filler) {
-            for (int i = -(map.getMap()[selectedR][selectedC].getUnit().getMovement()); i < map.getMap()[selectedR][selectedC].getUnit().getMovement() + 1; i++){
+            if (unitSelected) { //If a unit is selected
+              for (int i = -(map.getMap()[selectedR][selectedC].getUnit().getMovement()); i < map.getMap()[selectedR][selectedC].getUnit().getMovement() + 1; i++){
                 for (int j = -(map.getMap()[selectedR][selectedC].getUnit().getMovement()); j < map.getMap()[selectedR][selectedC].getUnit().getMovement() + 1; j++) {
-
-                    if (interactions.validateMove(map.getMap()[selectedR][selectedC].getUnit(), map.getMap()[selectedR][selectedC].getUnit().getR() + i, map.getMap()[selectedR][selectedC].getUnit().getC() + j)) {
-                        g.drawImage(greyTarget, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
-                    } else if (map.getMap()[map.getMap()[selectedR][selectedC].getUnit().getR() + i][map.getMap()[selectedR][selectedC].getUnit().getC() + j].getUnit() != null){
-                        g.drawImage(redTarget, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
-                    }
-
+                  if (interactions.validateMove(map.getMap()[selectedR][selectedC].getUnit(), map.getMap()[selectedR][selectedC].getUnit().getR() + i, map.getMap()[selectedR][selectedC].getUnit().getC() + j)) {
+                    g.drawImage(greyTarget, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                  } else if (map.getMap()[map.getMap()[selectedR][selectedC].getUnit().getR() + i][map.getMap()[selectedR][selectedC].getUnit().getC() + j].getUnit() != null){
+                    g.drawImage(redTarget, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                  }
                 }
+              }
+              if (unitMove) { //If the player selected the unit, then clicked on a different tile
+                //if (validation using interactions) {
+                  //Part of code that moves the unit or does the attack stuff
+                  unitSelected = false; //Reset to say no unit is selected
+                //}
+                unitMove = false;
+              }
             }
-            //}
+            
+            //Doing resource stuff
+            if (resourceSelected) {
+              //if () { //Check if the player has enough resources AND if it is in range of a city
+                g.drawImage(greenCheck, (tileDim*selectedC), (tileDim*(selectedR+1)), tileDim, tileDim, this); //Show the green check below the resource selected to confirm
+                if (((selectedR2-1) == selectedR) && (selectedC2 == selectedC)) {
+                  //Subtract from player's currency and increase population of the city that it belongs to
+                  //Yea maybe this stuff should be in a different class and use that class's methods
+                }
+              //} else set resourceSelected to not
+            }
+            
+            //Doing city stuff
+            if (citySelected) {
+              //Display menu options first (troops to train), as well as showing city level
+            }
 
         }
     }
@@ -96,7 +149,48 @@ class GameMapFrame extends JFrame {
     private class MyMouseListener implements MouseListener {
 
         public void mouseClicked(MouseEvent e) {
-            //add the thing from git
+            int x = e.getX();
+            int y = e.getY();
+            int option = 0;
+            if ((x <= tileDim*(map.getMap().length)) && (x >= 0) && (y <= tileDim*(map.getMap().length)) && (y >= 0)) {
+              int r = (x/tileDim)-1;
+              int c = (y/tileDim)-1;
+              option = interactions.displayOptions(r, c, unitSelected); //Has to pass in not just unitSelected, but whatever is being selected
+            }
+            if (option == 1) {
+              if (!unitSelected) {
+                unitSelected = true;
+              } else {
+                unitSelected = false;
+              }
+            } else if (option == 2) {
+              citySelected = true;
+            } else if (option == 3) {
+              if (!resourceSelected) {
+                resourceSelected = true;
+              } else {
+                unitSelected = false;
+              }
+            } else if (option == 4) {
+              unitMove = true;
+            }
+            if (option < 4) {
+              selectedR = y;
+              selectedC = x;
+            } else if (option == 4) { //Should only be option 4 if it is in range? - as it is now clicking anywhere that's not in range will just deselect everything?
+              if ((y == selectedR) && (x == selectedC) && unitSelected) { //If you select a tile with a unit on it for the second time
+                unitSelected = false; //Set the unit to not selected
+                option = interactions.displayOptions(((x/tileDim)-1), ((y/tileDim)-1), false); //Get the options for whatever else is on the same tile
+                if (option == 2) {
+                  citySelected = true; //If a city below the unit
+                } else if (option == 3) {
+                  resourceSelected = true; //If a resource below the unit
+                }
+              } else { //If they select a tile with a unit on it and then click on a different tile
+                selectedR2 = y;
+                selectedC2 = x;
+              }
+            }
         }
 
         public void mousePressed(MouseEvent e) {
@@ -110,6 +204,7 @@ class GameMapFrame extends JFrame {
 
         public void mouseExited(MouseEvent e) {
         }
+        
     } //end of mouselistener
 
     public static void main(String[] args) {
