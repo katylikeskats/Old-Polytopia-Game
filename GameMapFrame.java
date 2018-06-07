@@ -1,3 +1,5 @@
+//Uh the check is popping up for cities for some reason
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Toolkit;
@@ -130,7 +132,7 @@ class GameMapFrame extends JFrame {
       //Doing resource stuff
       if (resourceSelected) {
         //if () { //Check if the player has enough resources AND if it is in range of a city
-        g.drawImage(greenCheck, (tileDim*(selectedC-1)), (tileDim*selectedR), tileDim, tileDim, this); //Show the green check below the resource selected to confirm
+        g.drawImage(greenCheck, (tileDim*(selectedC)), (tileDim*(selectedR+1)), tileDim, tileDim, this); //Show the green check below the resource selected to confirm
         if (((selectedR2-1) == selectedR) && (selectedC2 == selectedC)) {
           //Subtract from player's currency and increase population of the city that it belongs to
           //Yea maybe this stuff should be in a different class and use that class's methods
@@ -151,30 +153,46 @@ class GameMapFrame extends JFrame {
   private class MyMouseListener implements MouseListener {
     
     public void mouseClicked(MouseEvent e) {
+      
+    }
+    
+    public void mousePressed(MouseEvent e) {
       int x = e.getX();
       int y = e.getY();
       int option = 0;
       if ((x <= tileDim*(map.getMap().length)) && (x >= 0) && (y <= tileDim*(map.getMap().length)) && (y >= 0)) {
-        r = (int)(Math.round(((double)y)/((double)tileDim)));
-        c = (int)(Math.round(((double)x)/((double)tileDim)));
-        option = interactions.displayOptions(r, c, unitSelected); //Has to pass in not just unitSelected, but whatever is being selected
+        r = (int)(((double)y)/((double)tileDim));
+        c = (int)(((double)x)/((double)tileDim));
+        if (unitSelected || citySelected || resourceSelected) {
+          option = interactions.displayOptions(r, c, true); //Has to pass in not just unitSelected, but whatever is being selected
+        } else {
+          option = interactions.displayOptions(r, c, false);
+        }
       }
       if (option == 1) {
+        resourceSelected = false;
+        citySelected = false;
         if (!unitSelected) {
           unitSelected = true;
         } else {
           unitSelected = false;
         }
       } else if (option == 2) {
+        resourceSelected = false;
+        unitSelected = false;
         citySelected = true;
       } else if (option == 3) {
         if (!resourceSelected) {
           resourceSelected = true; //Ok at least this part works
         } else {
-          unitSelected = false;
+          resourceSelected = false;
         }
       } else if (option == 4) {
         unitMove = true;
+      } else if (option == 5) {
+        resourceSelected = false;
+        unitSelected = false;
+        citySelected = false;
       }
       if (option < 4) {
         selectedR = r;
@@ -193,9 +211,6 @@ class GameMapFrame extends JFrame {
           selectedC2 = x;
         }
       }
-    }
-    
-    public void mousePressed(MouseEvent e) {
     }
     
     public void mouseReleased(MouseEvent e) {
