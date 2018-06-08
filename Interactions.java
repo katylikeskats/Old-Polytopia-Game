@@ -63,17 +63,24 @@ public class Interactions {
         unit.setTribe(mindbender.getTribe());
     }
 
-    public void displayOptions(int r, int c){
-        if (!map.getMap()[r][c].isEmpty()){
-            if (map.getMap()[r][c].containsCity()){
-                ///GameMapFrame.display
-            }
-            if (map.getMap()[r][c].containsResource()){
-
-            }
+    public int displayOptions(int r, int c, boolean selected){
+        if (map.getMap()[r][c] != null){
+          //if (!selected) {
             if (map.getMap()[r][c].containsUnit()){
-
+              return 1;
+            } else if (map.getMap()[r][c].containsCity()){
+              return 2; 
+            } else if (map.getMap()[r][c].containsResource()){
+              return 3;
+            } else {
+              return 5;
             }
+            /*
+          } else {
+            return 4;
+          }
+          */
         }
+        return 0;
     }
 }
