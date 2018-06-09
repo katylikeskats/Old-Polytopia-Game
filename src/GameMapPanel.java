@@ -29,6 +29,7 @@ class GameMapPanel extends JPanel{
     private static Image grassImage = Toolkit.getDefaultToolkit().getImage("assets/Grass.png");
     private static Image waterImage = Toolkit.getDefaultToolkit().getImage("assets/Water.jpg");
     private static Image cityImage = Toolkit.getDefaultToolkit().getImage("assets/ImperiusCity1.png");
+    private static Image mountainImage = Toolkit.getDefaultToolkit().getImage("assets/Mountain.png");
     private static Image animalImage = Toolkit.getDefaultToolkit().getImage("assets/Animal.png");
     private static Image fishImage = Toolkit.getDefaultToolkit().getImage("assets/Fish.png");
     private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("assets/Fruit.png");
@@ -62,6 +63,8 @@ class GameMapPanel extends JPanel{
                         g.drawImage(waterImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
                     } else if (map.getMap()[i][j].getTerrain() instanceof Grass) {
                         g.drawImage(grassImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                    } else if (map.getMap()[i][j].getTerrain() instanceof Mountain) {
+                      g.drawImage(mountainImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
                     }
                     if (map.getMap()[i][j].getCity() != null) {
                         g.drawImage(cityImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
