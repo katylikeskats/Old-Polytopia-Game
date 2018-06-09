@@ -225,7 +225,9 @@ class Map {
                         if (random3 < 2) {
                           tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
                         } else if (random3 == 4) {
-                          tileMap[i][j].setResource(new Whale(i, j)); //Rep whale
+                          if (Math.random() < 0.5) {
+                            tileMap[i][j].setResource(new Whale(i, j)); //Rep whale
+                          }
                         }
                     }
                 }
