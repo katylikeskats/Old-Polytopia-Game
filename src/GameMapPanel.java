@@ -34,6 +34,7 @@ class GameMapPanel extends JPanel{
     private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("assets/Fruit.png");
     private static Image treeImage = Toolkit.getDefaultToolkit().getImage("assets/Tree.png");
     private static Image cropImage = Toolkit.getDefaultToolkit().getImage("assets/Crop.png");
+    private static Image whaleImage = Toolkit.getDefaultToolkit().getImage("assets/Whale.png");
 
     GameMapPanel(Map map, int height) {
         this.map = map;
@@ -81,6 +82,8 @@ class GameMapPanel extends JPanel{
                         g.drawImage(treeImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
                     } else if (map.getMap()[i][j].getResource() instanceof Animal) {
                         g.drawImage(animalImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                    } else if (map.getMap()[i][j].getResource() instanceof Whale) {
+                      g.drawImage(whaleImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
                     }
                 }
             }
