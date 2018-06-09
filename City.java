@@ -13,6 +13,17 @@ public class City{
     private int order;
     private Player player;
     //Constructor
+    public City(int r, int c, boolean capital){
+        this.r = r;
+        this.c = c;
+        this.capital = capital;
+        this.cityRadius = 1;
+        this.maxUnits = 2;
+        this.maxPop = 2;
+        this.currPop = 0;
+        this.level = 1;
+    }
+
     public City(int r, int c, boolean capital, Player player){
         this.r = r;
         this.c = c;

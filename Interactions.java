@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.awt.Graphics;
 
 public class Interactions {
-    private MapUpdated map;
+    private Map map;
 
-    public Interactions(MapUpdated map){
+    public Interactions(Map map){
         this.map = map;
     }
 
@@ -65,15 +64,15 @@ public class Interactions {
 
     public int displayOptions(int r, int c, boolean selected){
         if (map.getMap()[r][c] != null){
-          //if (!selected) {
+            //if (!selected) {
             if (map.getMap()[r][c].containsUnit()){
-              return 1;
+                return 1;
             } else if (map.getMap()[r][c].containsCity()){
-              return 2; 
+                return 2;
             } else if (map.getMap()[r][c].containsResource()){
-              return 3;
+                return 3;
             } else {
-              return 5;
+                return 5;
             }
             /*
           } else {
@@ -83,4 +82,6 @@ public class Interactions {
         }
         return 0;
     }
+
+
 }

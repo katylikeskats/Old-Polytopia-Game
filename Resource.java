@@ -3,18 +3,16 @@ import java.util.ArrayList;
 abstract public class Resource {
     private int r;
     private int c;
-    private int tribe;
     private City city;
     private int popIncrease;
     private int cost;
     private ArrayList<String> options = new ArrayList<String>();
 
-    public Resource(int r, int c, int popIncrease, int cost, int tribe){
+    public Resource(int r, int c, int popIncrease, int cost){
         this.r = r;
         this.c = c;
         this.popIncrease = popIncrease;
         this.cost = cost;
-        this.tribe = tribe;
     }
 
     public ArrayList<String> getOptions(){
@@ -61,11 +59,4 @@ abstract public class Resource {
         this.c = c;
     }
 
-    public int getTribe() {
-        return tribe;
-    }
-
-    public void setTribe(int tribe) {
-        this.tribe = tribe;
-    }
 }

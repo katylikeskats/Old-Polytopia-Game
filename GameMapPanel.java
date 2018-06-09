@@ -1,5 +1,3 @@
-//Uh the check is popping up for cities for some reason
-
 import javax.swing.JPanel;
 import java.awt.Toolkit;
 import java.awt.Graphics;
@@ -17,7 +15,6 @@ class GameMapPanel extends JPanel{
     static boolean unitSelected;
     static boolean citySelected;
     static boolean resourceSelected;
-    static double x,y;
     private Map map;
     private Interactions interactions;
     static int tileDim; //Size of a tile (length)
@@ -110,20 +107,21 @@ class GameMapPanel extends JPanel{
 
             //Doing resource stuff
             if (resourceSelected) {
-                //if () { //Check if the player has enough resources AND if it is in range of a city
-                g.drawImage(greenCheck, (tileDim*(selectedC)), (tileDim*(selectedR)), tileDim, tileDim, this); //Show the green check below the resource selected to confirm
-                if (((selectedR2-1) == selectedR) && (selectedC2 == selectedC)) {
+                //OptionsPanel.showResource = true;
+                //GameFrame.displayOptions = true;
+                //if (((selectedR2-1) == selectedR) && (selectedC2 == selectedC)) {
                     //Subtract from player's currency and increase population of the city that it belongs to
                     //Yea maybe this stuff should be in a different class and use that class's methods
-                }
+                //}
                 //} else set resourceSelected to not
-            }
+            } //else {
+                //GameFrame.displayOptions = false;
+            //}
 
             //Doing city stuff
             if (citySelected) {
-                //Display menu options first (troops to train), as well as showing city level
             }
-
+            //System.out.println(resourceSelected+" "+citySelected);
         }
 
 
@@ -152,6 +150,8 @@ class GameMapPanel extends JPanel{
             if (option == 1) {
                 resourceSelected = false;
                 citySelected = false;
+                GameFrame.displayOptions = false;
+
                 if (!unitSelected) {
                     unitSelected = true;
                 } else {
@@ -160,10 +160,30 @@ class GameMapPanel extends JPanel{
             } else if (option == 2) {
                 resourceSelected = false;
                 unitSelected = false;
-                citySelected = true;
+                GameFrame.displayOptions = false;
+                OptionsPanel.showUnit = false;
+                OptionsPanel.showResource = false;
+
+                if (!citySelected){
+                    citySelected = true;
+                    GameFrame.displayOptions = true;
+                    OptionsPanel.showUnit = true;
+
+                } else {
+                    citySelected = false;
+                }
+
             } else if (option == 3) {
+                unitSelected = false;
+                citySelected = false;
+                GameFrame.displayOptions = false;
+                OptionsPanel.showUnit = false;
+                OptionsPanel.showResource = false;
+
                 if (!resourceSelected) {
                     resourceSelected = true; //Ok at least this part works
+                    GameFrame.displayOptions = true;
+                    OptionsPanel.showResource = true;
                 } else {
                     resourceSelected = false;
                 }
@@ -173,6 +193,7 @@ class GameMapPanel extends JPanel{
                 resourceSelected = false;
                 unitSelected = false;
                 citySelected = false;
+                GameFrame.displayOptions = false;
             }
             if (option < 4) {
                 selectedR = r;
