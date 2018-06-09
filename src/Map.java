@@ -59,7 +59,7 @@ class Map {
 
         }
 
-        //Adding water
+        //Adding Water
         addWater();
 
         //Adding Cities
@@ -67,6 +67,9 @@ class Map {
 
         //Adding Items
         addItems();
+        
+        //Adding Mountains
+        addMountains();
         
         //Set the capital cities (number of which depends on the number of players), which are the players' starting cities
         //A tribe (int) is also assigned to each capital city (other cities are given tribes when captured by a player)
@@ -220,7 +223,7 @@ class Map {
                 } else {
                     if (adjacentCity(i, j)) {
                         if (random3 < 2) {
-                            tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
+                          tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
                         } else if (random3 == 4) {
                           tileMap[i][j].setResource(new Whale(i, j)); //Rep whale
                         }
@@ -228,6 +231,46 @@ class Map {
                 }
             }
         }
+    }
+    
+    private void addMountains() {
+      int randRow = 0; 
+      int randColumn = 0;
+      int randValue = 0;
+      do {
+        randRow = (int)(Math.round(Math.random()*(MAP_LENGTH-4))) + 2;
+        randColumn = (int)(Math.round(Math.random()*(MAP_LENGTH-4))) + 2;
+        for (int i = (randRow - 2); i < (randRow + 2); i++) {
+          for (int j = (randColumn - 2); j < (randColumn + 2); j++) {
+            if ((tileMap[i][j].getTerrain() instanceof Grass) && (tileMap[i][j].isEmpty())) {
+              randValue = (int)(Math.round(Math.random()));
+              if (randValue == 0) {
+                tileMap[i][j] = new Space(new Mountain(i, j));
+              }
+            }
+          }
+        }
+      } while (!checkMountainCoverage());
+    }
+    
+    private boolean checkMountainCoverage() {
+      int numLandTiles = 0;
+      int numMountains = 0;
+      for (int i = 0; i < MAP_LENGTH; i++) {
+        for (int j = 0; j < MAP_LENGTH; j++) {
+          if (!(tileMap[i][j].getTerrain() instanceof Water)) {
+            numLandTiles++; //Increase count of the number of land tiles in total
+            if (tileMap[i][j].getTerrain() instanceof Mountain) {
+              numMountains++; //Increase count of the number of mountain tiles
+            }
+          }
+        }
+      }
+      if (numMountains > 0.15*numLandTiles) {
+        return true;
+      } else {
+        return false;
+      }
     }
     
     //Sets the capital city for each sector (number of sectors determined by number of players), and sets the tribes for those cities as well
