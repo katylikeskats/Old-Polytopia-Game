@@ -221,6 +221,8 @@ class Map {
                     if (adjacentCity(i, j)) {
                         if (random3 < 2) {
                             tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
+                        } else if (random3 == 4) {
+                          tileMap[i][j].setResource(new Whale(i, j)); //Rep whale
                         }
                     }
                 }
