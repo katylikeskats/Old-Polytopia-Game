@@ -25,20 +25,20 @@ class GameMapPanel extends JPanel{
     private int r = 0;
     private int c = 0;
 
-    private static Image redTarget = Toolkit.getDefaultToolkit().getImage("RedTarget.png");
-    private static Image greyTarget = Toolkit.getDefaultToolkit().getImage("GreyTarget.png");
-    private static Image greenCheck = Toolkit.getDefaultToolkit().getImage("Checkmark.png");
-    private static Image grassImage = Toolkit.getDefaultToolkit().getImage("Grass.png");
-    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("Water.jpg");
-    private static Image mountainImage = Toolkit.getDefaultToolkit().getImage("Mountain.png");
-    private static Image cityImage = Toolkit.getDefaultToolkit().getImage("ImperiusCity1.png");
-    private static Image animalImage = Toolkit.getDefaultToolkit().getImage("Animal.png");
-    private static Image fishImage = Toolkit.getDefaultToolkit().getImage("Fish.png");
-    private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("Fruit.png");
-    private static Image treeImage = Toolkit.getDefaultToolkit().getImage("Tree.png");
-    private static Image cropImage = Toolkit.getDefaultToolkit().getImage("Crop.png");
-    private static Image whaleImage = Toolkit.getDefaultToolkit().getImage("Whale.png");
-    private static Image starImage = Toolkit.getDefaultToolkit().getImage("Star.png");
+    private static Image redTarget = Toolkit.getDefaultToolkit().getImage("assets/RedTarget.png");
+    private static Image greyTarget = Toolkit.getDefaultToolkit().getImage("assets/GreyTarget.png");
+    private static Image greenCheck = Toolkit.getDefaultToolkit().getImage("assets/Checkmark.png");
+    private static Image grassImage = Toolkit.getDefaultToolkit().getImage("assets/Grass.png");
+    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("assets/Water.jpg");
+    private static Image mountainImage = Toolkit.getDefaultToolkit().getImage("assets/Mountain.png");
+    private static Image cityImage = Toolkit.getDefaultToolkit().getImage("assets/ImperiusCity1.png");
+    private static Image animalImage = Toolkit.getDefaultToolkit().getImage("assets/Animal.png");
+    private static Image fishImage = Toolkit.getDefaultToolkit().getImage("assets/Fish.png");
+    private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("assets/Fruit.png");
+    private static Image treeImage = Toolkit.getDefaultToolkit().getImage("assets/Tree.png");
+    private static Image cropImage = Toolkit.getDefaultToolkit().getImage("assets/Crop.png");
+    private static Image whaleImage = Toolkit.getDefaultToolkit().getImage("assets/Whale.png");
+    private static Image starImage = Toolkit.getDefaultToolkit().getImage("assets/Star.png");
     
     Color grey = new Color(100,100,100);
 
