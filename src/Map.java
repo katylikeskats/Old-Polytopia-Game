@@ -74,6 +74,9 @@ class Map {
         //Set the capital cities (number of which depends on the number of players), which are the players' starting cities
         //A tribe (int) is also assigned to each capital city (other cities are given tribes when captured by a player)
         assignCapitals();
+        
+        //Designate which items belong to which cities (right now ONLY FOR THE ITEMS WITHIN ONE TILE OF THE CITY)
+        assignCitiesItems();
 
     }
 
@@ -368,6 +371,25 @@ class Map {
         }
       }
       return numLandTilesSurrounding;
+    }
+    
+    //Will also need to be used whenever cities expand borders (are we doing that)
+    public void assignCitiesItems() {
+      for (int i = 0; i < MAP_LENGTH; i++) {
+        for (int j = 0; j < MAP_LENGTH; j++) {
+          if (tileMap[i][j].getCity() != null) {
+            for (int a = (i - 1); a < (i + 2); a++) {
+              for (int b = (j - 1); b < (j + 2); b++) {
+                if (tileMap[a][b].getResource() != null) {
+                  if (tileMap[a][b].getResource().getCity() == null) {
+                    tileMap[a][b].getResource().setCity(tileMap[i][j].getCity());
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     public void printMap() {
