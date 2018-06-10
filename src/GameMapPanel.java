@@ -3,6 +3,8 @@ import java.awt.Toolkit;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Dimension;
+import java.awt.Color;
+
 //Mouse imports
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
@@ -23,19 +25,22 @@ class GameMapPanel extends JPanel{
     private int r = 0;
     private int c = 0;
 
-    private static Image redTarget = Toolkit.getDefaultToolkit().getImage("assets/RedTarget.png");
-    private static Image greyTarget = Toolkit.getDefaultToolkit().getImage("assets/GreyTarget.png");
-    private static Image greenCheck = Toolkit.getDefaultToolkit().getImage("assets/Checkmark.png");
-    private static Image grassImage = Toolkit.getDefaultToolkit().getImage("assets/Grass.png");
-    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("assets/Water.jpg");
-    private static Image cityImage = Toolkit.getDefaultToolkit().getImage("assets/ImperiusCity1.png");
-    private static Image mountainImage = Toolkit.getDefaultToolkit().getImage("assets/Mountain.png");
-    private static Image animalImage = Toolkit.getDefaultToolkit().getImage("assets/Animal.png");
-    private static Image fishImage = Toolkit.getDefaultToolkit().getImage("assets/Fish.png");
-    private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("assets/Fruit.png");
-    private static Image treeImage = Toolkit.getDefaultToolkit().getImage("assets/Tree.png");
-    private static Image cropImage = Toolkit.getDefaultToolkit().getImage("assets/Crop.png");
-    private static Image whaleImage = Toolkit.getDefaultToolkit().getImage("assets/Whale.png");
+    private static Image redTarget = Toolkit.getDefaultToolkit().getImage("RedTarget.png");
+    private static Image greyTarget = Toolkit.getDefaultToolkit().getImage("GreyTarget.png");
+    private static Image greenCheck = Toolkit.getDefaultToolkit().getImage("Checkmark.png");
+    private static Image grassImage = Toolkit.getDefaultToolkit().getImage("Grass.png");
+    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("Water.jpg");
+    private static Image mountainImage = Toolkit.getDefaultToolkit().getImage("Mountain.png");
+    private static Image cityImage = Toolkit.getDefaultToolkit().getImage("ImperiusCity1.png");
+    private static Image animalImage = Toolkit.getDefaultToolkit().getImage("Animal.png");
+    private static Image fishImage = Toolkit.getDefaultToolkit().getImage("Fish.png");
+    private static Image fruitImage = Toolkit.getDefaultToolkit().getImage("Fruit.png");
+    private static Image treeImage = Toolkit.getDefaultToolkit().getImage("Tree.png");
+    private static Image cropImage = Toolkit.getDefaultToolkit().getImage("Crop.png");
+    private static Image whaleImage = Toolkit.getDefaultToolkit().getImage("Whale.png");
+    private static Image starImage = Toolkit.getDefaultToolkit().getImage("Star.png");
+    
+    Color grey = new Color(100,100,100);
 
     GameMapPanel(Map map, int height) {
         this.map = map;
@@ -88,6 +93,45 @@ class GameMapPanel extends JPanel{
                     } else if (map.getMap()[i][j].getResource() instanceof Whale) {
                       g.drawImage(whaleImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
                     }
+                }
+            }
+            
+            //City pop/max unit num indicators
+            //Works for max populations UP TO 5 ONLY!!!!
+            for (int i = 0; i < map.getMap().length; i++) {
+                for (int j = 0; j < map.getMap().length; j++) {
+                  if (map.getMap()[i][j].getCity() != null) {
+                    g.setColor(Color.BLACK);
+                    for (int a = 0; a < map.getMap()[i][j].getCity().getMaxPop(); a++) { //Display the boxes for population
+                      if (((map.getMap()[i][j].getCity().getMaxPop() == 3) && (a == 2)) || ((map.getMap()[i][j].getCity().getMaxPop() > 3) && (a == 3))) {
+                        g.drawRect((int)(((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+1, ((tileDim*(i+1))-(tileDim/5)), (int)(Math.round((double)(tileDim)/4))-1, (tileDim/5)+(tileDim/10));
+                      } else {
+                        g.drawRect((int)(((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4))), ((tileDim*(i+1))-(tileDim/5)), (int)(Math.round((double)(tileDim)/4)), (tileDim/5)+(tileDim/10));
+                      }
+                    }
+                    //g.drawRect((int)((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2)), ((tileDim*(i+1))-(tileDim/5)), (int)((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4)), ((tileDim/5)+(tileDim/10)));
+                    g.setColor(Color.BLUE);
+                    for (int a = 0; a < map.getMap()[i][j].getCity().getMaxPop(); a++) { //Display the current population (filled in bars)
+                      if (a >= map.getMap()[i][j].getCity().getCurrPop()) {
+                        g.setColor(grey);
+                      }
+                      if (((map.getMap()[i][j].getCity().getMaxPop() == 3) && (a == 2)) || ((map.getMap()[i][j].getCity().getMaxPop() > 3) && (a == 3))) {
+                        g.fillRect((int)(((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+2, ((tileDim*(i+1))-(tileDim/5))+1, (int)(Math.round((double)(tileDim)/4))-2, ((tileDim/5)+(tileDim/10))-1);
+                      } else {
+                        g.fillRect((int)(((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+1, ((tileDim*(i+1))-(tileDim/5))+1, (int)(Math.round((double)(tileDim)/4))-1, ((tileDim/5)+(tileDim/10))-1);
+                      }
+                    }
+                    g.setColor(Color.WHITE); //Draws white circles if they aren't on a blue filled rectangle
+                    for (int a = 0; a < map.getMap()[i][j].getCity().getCurrUnits(); a++) {
+                      if (a >= map.getMap()[i][j].getCity().getCurrPop()) {
+                        g.setColor(Color.BLACK); //If there are more units than there is current population, start drawing black circles (since the background will now be black)
+                      }
+                      g.fillOval((int)(((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+4, ((tileDim*(i+1))-(tileDim/5))+4, (int)(Math.round((double)(tileDim)/4))-8, ((tileDim/5)+(tileDim/10))-8);
+                    }
+                    if (map.getMap()[i][j].getCity().isCapital()) {
+                      g.drawImage(starImage, (int)((tileDim*j)+(tileDim/2)-(((double)(map.getMap()[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))-(int)(Math.round((double)(tileDim)/4)), ((tileDim*(i+1))-(tileDim/5)), (int)(Math.round((double)(tileDim)/4)), ((tileDim/5)+(tileDim/10)), this);
+                    }
+                  }
                 }
             }
 
