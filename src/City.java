@@ -22,6 +22,7 @@ public class City{
         this.maxPop = 2;
         this.currPop = 0;
         this.level = 1;
+        this.tribe = 5; //Initialize it to a non-existent tribe (so that it isn't 0)
     }
 
     public City(int r, int c, boolean capital, Player player){
@@ -34,6 +35,7 @@ public class City{
         this.currPop = 0;
         this.level = 1;
         this.player = player;
+        this.tribe = 5; //Initialize it to a non-existent tribe (so that it isn't 0)
     }
 
     /**
