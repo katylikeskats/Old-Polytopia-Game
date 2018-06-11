@@ -234,12 +234,12 @@ public class TechTreeFrame extends JFrame {
             tech.add("Whaling");
             tech.add("StartingTech");
 
-            Player player = new Player();
+           /* Player player = new Player();
             player.setTechnology(tech);
             player.setCurrency(24);
             player.setTierOneCost(5);
             player.setTierTwoCost(7);
-            new TechTreeFrame(player);
+            new TechTreeFrame(player);*/
 
     }
 

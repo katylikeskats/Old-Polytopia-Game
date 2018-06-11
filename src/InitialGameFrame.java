@@ -76,17 +76,6 @@ public class InitialGameFrame extends JFrame {
 
     }
 
-    /*private BufferedImage opacityChanger(BufferedImage original, float opacity){
-        BufferedImage newImage = new BufferedImage(original.getWidth(), original.getHeight(),BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = newImage.createGraphics();
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.DST_IN, opacity);
-        g.setComposite(ac);
-        g.drawImage(newImage, 0,0,null);
-
-        return newImage;
-
-    }*/
-
     private class InitialPanel extends JPanel {
         private Image background = Toolkit.getDefaultToolkit().getImage("assets/background3.png");
         private Image title = Toolkit.getDefaultToolkit().getImage("assets/title1.png");
@@ -128,6 +117,7 @@ public class InitialGameFrame extends JFrame {
             } else if (KeyEvent.getKeyText(e.getKeyCode()).equals("Space")){
                 name = name+" ";
             }
+
         }
 
         public void keyReleased(KeyEvent e) {

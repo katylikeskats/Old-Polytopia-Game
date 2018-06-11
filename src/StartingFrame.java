@@ -88,7 +88,9 @@ class StartingFrame extends JFrame {
     class StartButtonListener implements ActionListener {  //this is the required class definition
             public void actionPerformed(ActionEvent event)  {
                 thisFrame.dispose();
-                new InitialGameFrame();
+                //new InitialGameFrame();
+                //Map map = new Map(10);
+                //new GameFrame(map);
                 //new GameMapFrame(new Map(30));
             }
 

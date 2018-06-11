@@ -19,8 +19,12 @@ public class Player {
     private int selMapRow;
     private int selMapCol;
 
+    private int tierOneCost;
+    private int tierTwoCost;
+
     boolean[][] mask;
     private Interactions handler;
+
 
     public Player(City city, int tribe, Interactions interaction, int mapLength) {
         this.tribe = tribe;
@@ -31,101 +35,122 @@ public class Player {
         //initialize the map to cover most of the map
         for (int i = 0; i < mapLength; i++) {
             for (int j = 0; j < mapLength; j++) {
-                if ((i == city.getR() + 2) || (i == city.getR() + 2) || (j == city.getC() + 2) || (j == city.getC() + 2)) {
+                if ((Math.abs(i - city.getR()) < 3) && (Math.abs(j - city.getC()) < 3)) {
                     mask[i][j] = false;
                 } else {
                     mask[i][j] = true;
                 }
             }
         }
+
+        currency = 100;
+
     }
 
-        public void addTechnology(String technology){
-            this.technology.add(technology);
-        }
+    public void addTechnology(String technology){
+        this.technology.add(technology);
+    }
 
-        public void addUnit(int unit){
-            units[unit] = true;
-        }
+    public void addUnit(int unit){
+        units[unit] = true;
+    }
 
-        public void addCity(int r, int c) {
-            cities.add(new City(r, c, false, this));
-        }
+    public void addCity(int r, int c) {
+        cities.add(new City(r, c, false, this));
+    }
 
-        public void removeCity(City desiredCity) {
-            City city;
-            while (itr.hasNext()) {
-                city = itr.next();
-                if ((desiredCity.getR() == city.getR()) && (desiredCity.getC() == city.getC())) {
-                    cities.remove(city);
-                }
+    public void removeCity(City desiredCity) {
+        City city;
+        while (itr.hasNext()) {
+            city = itr.next();
+            if ((desiredCity.getR() == city.getR()) && (desiredCity.getC() == city.getC())) {
+                cities.remove(city);
             }
         }
+    }
 
-        public void turnCurrencyIncrease() { //Calculate star increase for a given turn (at a given moment)
-            int currencyIncrease = 0;
-            City city;
-            while (itr.hasNext()) {
-                city = itr.next();
-                if (city.isCapital()) {
-                    currencyIncrease += (city.getLevel() + 1);
-                } else {
-                    currencyIncrease += city.getLevel();
-                }
+    public void turnCurrencyIncrease() { //Calculate star increase for a given turn (at a given moment)
+        int currencyIncrease = 0;
+        for (int i = 0; i < cities.size(); i++) {
+            if (cities.get(i).isCapital()) {
+                currencyIncrease += (cities.get(i).getLevel() + 1);
+            } else {
+                currencyIncrease += cities.get(i).getLevel();
             }
-            currency += currencyIncrease;
         }
+        currency += currencyIncrease;
+    }
 
 
-        public int getTribe() {
-            return tribe;
-        }
+    public int getTribe() {
+        return tribe;
+    }
 
-        public void setTribe(int tribe) {
-            this.tribe = tribe;
-        }
+    public void setTribe(int tribe) {
+        this.tribe = tribe;
+    }
 
-        public int getCurrency() {
-            return currency;
-        }
+    public int getCurrency() {
+        return currency;
+    }
 
-        public void setCurrency(int currency) {
-            this.currency = currency;
-        }
+    public void setCurrency(int currency) {
+        this.currency = currency;
+    }
 
-        public ArrayList<String> getTechnology() {
-            return technology;
-        }
+    public ArrayList<String> getTechnology() {
+        return technology;
+    }
 
-        public void setTechnology(ArrayList<String> technology) {
-            this.technology = technology;
-        }
+    public void setTechnology(ArrayList<String> technology) {
+        this.technology = technology;
+    }
 
-        public ArrayList<City> getCities() {
-            return cities;
-        }
+    public ArrayList<City> getCities() {
+        return cities;
+    }
 
-        public void setCities(ArrayList<City> cities) {
-            this.cities = cities;
-        }
+    public void setCities(ArrayList<City> cities) {
+        this.cities = cities;
+    }
 
-        public boolean[] getUnits() {
-            return units;
-        }
+    public boolean[] getUnits() {
+        return units;
+    }
 
-        public void setUnits(boolean[] units) {
-            this.units = units;
-        }
+    public void setUnits(boolean[] units) {
+        this.units = units;
+    }
 
-        public void turn(){
-            while(!turnEnd){
-                if (citySelected){
+    public boolean[][] getMask() {
+        return mask;
+    }
+
+    public void turn(){
+        while(!turnEnd){
+            if (citySelected){
                 //    interaction.displayUnits();
-                }
-               // if (confirmAction()){
-                 //   if (){
-                   // }
-               // }
             }
+            // if (confirmAction()){
+            //   if (){
+            // }
+            // }
         }
     }
+
+    public int getTierOneCost() {
+        return tierOneCost;
+    }
+
+    public void setTierOneCost(int tierOneCost) {
+        this.tierOneCost = tierOneCost;
+    }
+
+    public int getTierTwoCost() {
+        return tierTwoCost;
+    }
+
+    public void setTierTwoCost(int tierTwoCost) {
+        this.tierTwoCost = tierTwoCost;
+    }
+}

@@ -67,14 +67,14 @@ class Map {
 
         //Adding Items
         addItems();
-        
+
         //Adding Mountains
         addMountains();
-        
+
         //Set the capital cities (number of which depends on the number of players), which are the players' starting cities
         //A tribe (int) is also assigned to each capital city (other cities are given tribes when captured by a player)
         assignCapitals();
-        
+
         //Designate which items belong to which cities (right now ONLY FOR THE ITEMS WITHIN ONE TILE OF THE CITY)
         assignCitiesItems();
 
@@ -226,163 +226,183 @@ class Map {
                 } else {
                     if (adjacentCity(i, j)) {
                         if (random3 < 2) {
-                          tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
+                            tileMap[i][j].setResource(new Fish(i, j)); //Rep fish
                         } else if (random3 == 4) {
-                          if (Math.random() < 0.5) {
-                            tileMap[i][j].setResource(new Whale(i, j)); //Rep whale
-                          }
+                            if (Math.random() < 0.5) {
+                                tileMap[i][j].setResource(new Whale(i, j)); //Rep whale
+                            }
                         }
                     }
                 }
             }
         }
     }
-    
+
     private void addMountains() {
-      int randRow = 0; 
-      int randColumn = 0;
-      int randValue = 0;
-      do {
-        randRow = (int)(Math.round(Math.random()*(MAP_LENGTH-4))) + 2;
-        randColumn = (int)(Math.round(Math.random()*(MAP_LENGTH-4))) + 2;
-        for (int i = (randRow - 2); i < (randRow + 2); i++) {
-          for (int j = (randColumn - 2); j < (randColumn + 2); j++) {
-            if ((tileMap[i][j].getTerrain() instanceof Grass) && (tileMap[i][j].isEmpty())) {
-              randValue = (int)(Math.round(Math.random()));
-              if (randValue == 0) {
-                tileMap[i][j] = new Space(new Mountain(i, j));
-              }
+        int randRow = 0;
+        int randColumn = 0;
+        int randValue = 0;
+        do {
+            randRow = (int)(Math.round(Math.random()*(MAP_LENGTH-4))) + 2;
+            randColumn = (int)(Math.round(Math.random()*(MAP_LENGTH-4))) + 2;
+            for (int i = (randRow - 2); i < (randRow + 2); i++) {
+                for (int j = (randColumn - 2); j < (randColumn + 2); j++) {
+                    if ((tileMap[i][j].getTerrain() instanceof Grass) && (tileMap[i][j].isEmpty())) {
+                        randValue = (int)(Math.round(Math.random()));
+                        if (randValue == 0) {
+                            tileMap[i][j] = new Space(new Mountain(i, j));
+                        }
+                    }
+                }
             }
-          }
-        }
-      } while (!checkMountainCoverage());
+        } while (!checkMountainCoverage());
     }
-    
+
     private boolean checkMountainCoverage() {
-      int numLandTiles = 0;
-      int numMountains = 0;
-      for (int i = 0; i < MAP_LENGTH; i++) {
-        for (int j = 0; j < MAP_LENGTH; j++) {
-          if (!(tileMap[i][j].getTerrain() instanceof Water)) {
-            numLandTiles++; //Increase count of the number of land tiles in total
-            if (tileMap[i][j].getTerrain() instanceof Mountain) {
-              numMountains++; //Increase count of the number of mountain tiles
+        int numLandTiles = 0;
+        int numMountains = 0;
+        for (int i = 0; i < MAP_LENGTH; i++) {
+            for (int j = 0; j < MAP_LENGTH; j++) {
+                if (!(tileMap[i][j].getTerrain() instanceof Water)) {
+                    numLandTiles++; //Increase count of the number of land tiles in total
+                    if (tileMap[i][j].getTerrain() instanceof Mountain) {
+                        numMountains++; //Increase count of the number of mountain tiles
+                    }
+                }
             }
-          }
         }
-      }
-      if (numMountains > 0.15*numLandTiles) {
-        return true;
-      } else {
-        return false;
-      }
+        if (numMountains > 0.15*numLandTiles) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
     //Sets the capital city for each sector (number of sectors determined by number of players), and sets the tribes for those cities as well
     private void assignCapitals() {
-      City bestCity = null;
-      int mostLandTilesSurrounding = 0;
-      int landTilesSurrounding = 0;
-      int minRow = 0;
-      int maxRow = 0;
-      int minColumn = 0;
-      int maxColumn = 0;
-      if (numPlayers == 2) {
-        for (int i = 0; i < 2; i++) {
-          mostLandTilesSurrounding = 0;
-          if (i == 0) {
-            minRow = 0; 
-            maxRow = MAP_LENGTH-1;
-            minColumn = 0; 
-            maxColumn = MAP_LENGTH/2;
-          } else if (i == 1) {
-            minRow = 0; 
-            maxRow = MAP_LENGTH-1;
-            minColumn = MAP_LENGTH/2;; 
-            maxColumn = MAP_LENGTH-1;
-          }
-          for (int r = minRow; r < maxRow; r++) {
-            for (int c = minColumn; c < maxColumn; c++) {
-              if (tileMap[r][c].getCity() != null) {
-                landTilesSurrounding = surroundingLandCheckCity(tileMap[r][c].getCity());
-                if (landTilesSurrounding > mostLandTilesSurrounding) {
-                  mostLandTilesSurrounding = landTilesSurrounding;
-                  bestCity = tileMap[r][c].getCity();
+        City bestCity = null;
+        int mostLandTilesSurrounding = 0;
+        int landTilesSurrounding = 0;
+        int minRow = 0;
+        int maxRow = 0;
+        int minColumn = 0;
+        int maxColumn = 0;
+        if (numPlayers == 2) {
+            for (int i = 0; i < 2; i++) {
+                mostLandTilesSurrounding = 0;
+                if (i == 0) {
+                    minRow = 0;
+                    maxRow = MAP_LENGTH-1;
+                    minColumn = 0;
+                    maxColumn = MAP_LENGTH/2;
+                } else if (i == 1) {
+                    minRow = 0;
+                    maxRow = MAP_LENGTH-1;
+                    minColumn = MAP_LENGTH/2;;
+                    maxColumn = MAP_LENGTH-1;
                 }
-              }
-            }
-          }
-          tileMap[bestCity.getR()][bestCity.getC()].getCity().setTribe(i);
-          tileMap[bestCity.getR()][bestCity.getC()].getCity().setCapital(true);
-          System.out.println("Capital city of player " + i + " is at " + bestCity.getC() + ", " + bestCity.getR()); //For checking capital city determination
-        }
-      } else if (numPlayers == 3) {
-        //Are we doing this
-      } else if (numPlayers == 4) {
-        for (int i = 0; i < 4; i++) {
-          mostLandTilesSurrounding = 0;
-          if (i == 0) {
-            minRow = 0;
-            maxRow = MAP_LENGTH/2;
-            minColumn = 0;
-            maxColumn = MAP_LENGTH/2;
-          } else if (i == 1) {
-            minRow = 0;
-            maxRow = MAP_LENGTH/2;
-            minColumn = MAP_LENGTH/2;
-            maxColumn = MAP_LENGTH-1;
-          } else if (i == 2) {
-            minRow = MAP_LENGTH/2;
-            maxRow = MAP_LENGTH-1;
-            minColumn = 0;
-            maxColumn = MAP_LENGTH/2;
-          } else if (i == 3) {
-            minRow = MAP_LENGTH/2;
-            maxRow = MAP_LENGTH-1;
-            minColumn = MAP_LENGTH/2;
-            maxColumn = MAP_LENGTH-1;
-          }
-          for (int r = minRow; r < maxRow; r++) {
-            for (int c = minColumn; c < maxColumn; c++) {
-              if (tileMap[r][c].getCity() != null) {
-                landTilesSurrounding = surroundingLandCheckCity(tileMap[r][c].getCity());
-                if (landTilesSurrounding > mostLandTilesSurrounding) {
-                  mostLandTilesSurrounding = landTilesSurrounding;
-                  bestCity = tileMap[r][c].getCity();
+                for (int r = minRow; r < maxRow; r++) {
+                    for (int c = minColumn; c < maxColumn; c++) {
+                        if (tileMap[r][c].getCity() != null) {
+                            landTilesSurrounding = surroundingLandCheckCity(tileMap[r][c].getCity());
+                            if (landTilesSurrounding > mostLandTilesSurrounding) {
+                                mostLandTilesSurrounding = landTilesSurrounding;
+                                bestCity = tileMap[r][c].getCity();
+                            }
+                        }
+                    }
                 }
-              }
+                tileMap[bestCity.getR()][bestCity.getC()].getCity().setTribe(i);
+                tileMap[bestCity.getR()][bestCity.getC()].getCity().setCapital(true);
+                System.out.println("Capital city of player " + i + " is at " + bestCity.getC() + ", " + bestCity.getR()); //For checking capital city determination
             }
-          }
-          tileMap[bestCity.getR()][bestCity.getC()].getCity().setTribe(i);
-          tileMap[bestCity.getR()][bestCity.getC()].getCity().setCapital(true);
-          System.out.println("Capital city of player " + i + " is at " + bestCity.getC() + ", " + bestCity.getR()); //For checking capital city determination
+        } else if (numPlayers == 3) {
+            //Are we doing this
+        } else if (numPlayers == 4) {
+            for (int i = 0; i < 4; i++) {
+                mostLandTilesSurrounding = 0;
+                if (i == 0) {
+                    minRow = 0;
+                    maxRow = MAP_LENGTH/2;
+                    minColumn = 0;
+                    maxColumn = MAP_LENGTH/2;
+                } else if (i == 1) {
+                    minRow = 0;
+                    maxRow = MAP_LENGTH/2;
+                    minColumn = MAP_LENGTH/2;
+                    maxColumn = MAP_LENGTH-1;
+                } else if (i == 2) {
+                    minRow = MAP_LENGTH/2;
+                    maxRow = MAP_LENGTH-1;
+                    minColumn = 0;
+                    maxColumn = MAP_LENGTH/2;
+                } else if (i == 3) {
+                    minRow = MAP_LENGTH/2;
+                    maxRow = MAP_LENGTH-1;
+                    minColumn = MAP_LENGTH/2;
+                    maxColumn = MAP_LENGTH-1;
+                }
+                for (int r = minRow; r < maxRow; r++) {
+                    for (int c = minColumn; c < maxColumn; c++) {
+                        if (tileMap[r][c].getCity() != null) {
+                            landTilesSurrounding = surroundingLandCheckCity(tileMap[r][c].getCity());
+                            if (landTilesSurrounding > mostLandTilesSurrounding) {
+                                mostLandTilesSurrounding = landTilesSurrounding;
+                                bestCity = tileMap[r][c].getCity();
+                            }
+                        }
+                    }
+                }
+                tileMap[bestCity.getR()][bestCity.getC()].getCity().setTribe(i);
+                tileMap[bestCity.getR()][bestCity.getC()].getCity().setCapital(true);
+                System.out.println("Capital city of player " + i + " is at " + bestCity.getC() + ", " + bestCity.getR()); //For checking capital city determination
+            }
         }
-      }
     }
-    
+
     //Count the number of land tiles around a city; the city with the most land tiles around it in a section will be assigned the capital city of the tribe starting in said section
     private int surroundingLandCheckCity(City city) {
-      int numLandTilesSurrounding = 0;
-      for (int i = city.getR() - 1; i < city.getR() + 2; i++) {
-        for (int j = city.getC() - 1; j < city.getC() + 2; j++) {
-          if (tileMap[i][j].getTerrain() instanceof Grass) {
-            numLandTilesSurrounding++;
-          }
+        int numLandTilesSurrounding = 0;
+        for (int i = city.getR() - 1; i < city.getR() + 2; i++) {
+            for (int j = city.getC() - 1; j < city.getC() + 2; j++) {
+                if (tileMap[i][j].getTerrain() instanceof Grass) {
+                    numLandTilesSurrounding++;
+                }
+            }
         }
-      }
-      return numLandTilesSurrounding;
+        return numLandTilesSurrounding;
     }
-    
+
     //Will also need to be used whenever cities expand borders (are we doing that)
     public void assignCitiesItems() {
+
+        for (int i = 0; i < MAP_LENGTH; i++) {
+            for (int j = 0; j < MAP_LENGTH; j++) {
+                if (tileMap[i][j].getCity() != null) {
+                    for (int a = (i - 1); a < (i + 2); a++) {
+                        for (int b = (j - 1); b < (j + 2); b++) {
+                            if (tileMap[a][b].getResource() != null) {
+                                if (tileMap[a][b].getResource().getCity() == null) {
+                                    tileMap[a][b].getResource().setCity(tileMap[i][j].getCity());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+      /* This part assigns items that are within a radius of 2 (not done at the beginning)
       for (int i = 0; i < MAP_LENGTH; i++) {
         for (int j = 0; j < MAP_LENGTH; j++) {
           if (tileMap[i][j].getCity() != null) {
-            for (int a = (i - 1); a < (i + 2); a++) {
-              for (int b = (j - 1); b < (j + 2); b++) {
-                if (tileMap[a][b].getResource() != null) {
-                  if (tileMap[a][b].getResource().getCity() == null) {
-                    tileMap[a][b].getResource().setCity(tileMap[i][j].getCity());
+            for (int a = (i - 2); a < (i + 3); a++) {
+              for (int b = (j - 2); b < (j + 3); b++) {
+                if ((a > 0) && (a < MAP_LENGTH) && (b > 0) && (b < MAP_LENGTH)) {
+                  if (tileMap[a][b].getResource() != null) {
+                    if (tileMap[a][b].getResource().getCity() == null) {
+                      tileMap[a][b].getResource().setCity(tileMap[i][j].getCity());
+                    }
                   }
                 }
               }
@@ -390,6 +410,8 @@ class Map {
           }
         }
       }
+      */
+
     }
 
     public void printMap() {
@@ -404,6 +426,10 @@ class Map {
 
     public Space[][] getMap() {
         return tileMap;
+    }
+
+    public int getMapLength() {
+        return MAP_LENGTH;
     }
 
 }

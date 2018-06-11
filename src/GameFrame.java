@@ -17,10 +17,10 @@ public class GameFrame extends JFrame {
     int mapPanelLength;
     int optionsPanHeight = 70;
     int optionsPanLength;
-    static boolean displayOptions = false;
+    static boolean displayOptions;
 
     GameMapPanel gameMapPanel2;
-    GameFrame(Map map) {
+    GameFrame(Map map, boolean[][] mask, Player player) {
         super("Polytopia");
         this.frame = this;
 
@@ -34,7 +34,7 @@ public class GameFrame extends JFrame {
 
         mapPanelLength = maxY - optionsPanHeight - 10;
 
-        mapPanel = new GameMapPanel(map, mapPanelLength);
+        mapPanel = new GameMapPanel(map, mapPanelLength, mask, player);
         mainPanel = new JPanel();
         sidePanel = new JPanel();
         bottomPanel = new JPanel();
@@ -77,8 +77,10 @@ public class GameFrame extends JFrame {
         }
     }
 
+    /*
     public static void main(String[] args){
-        Map map = new Map(20);
+        Map map = new Map(20, 4); //Test run
         new GameFrame(map);
     }
+    */
 }
