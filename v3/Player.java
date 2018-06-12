@@ -40,6 +40,7 @@ public class Player {
         }
         
         currency = 0;
+        technology.add("StartingTech");
         
     }
 
