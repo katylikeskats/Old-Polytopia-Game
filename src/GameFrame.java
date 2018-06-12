@@ -3,6 +3,7 @@ import javax.swing.JPanel;
 import java.awt.Toolkit;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Color;
 
 public class GameFrame extends JFrame {
     GameMapPanel mapPanel;
@@ -10,6 +11,7 @@ public class GameFrame extends JFrame {
     JPanel mainPanel;
     JPanel bottomPanel;
     JPanel bottomSidePanel;
+    MenuPanel menuPanel;
     OptionsPanel optionsPanel;
     JFrame frame;
     static int maxX;
@@ -17,6 +19,8 @@ public class GameFrame extends JFrame {
     int mapPanelLength;
     int optionsPanHeight = 70;
     int optionsPanLength;
+    int menuPanelWidth = 60;
+    static boolean turnEnd = false;
     static boolean displayOptions;
 
     GameMapPanel gameMapPanel2;
@@ -38,21 +42,29 @@ public class GameFrame extends JFrame {
         mainPanel = new JPanel();
         sidePanel = new JPanel();
         bottomPanel = new JPanel();
+        menuPanel = new MenuPanel(mapPanelLength, menuPanelWidth,player);
         optionsPanel = new OptionsPanel(optionsPanHeight, 700);
         bottomSidePanel = new JPanel();
 
+
+        sidePanel.setBackground(Color.black);
+        bottomPanel.setBackground(Color.black);
+        mapPanel.setBackground(Color.black);
+        menuPanel.setBackground(Color.black);
+
         optionsPanLength = optionsPanel.getWidth();
-        sidePanel.setPreferredSize(new Dimension(((maxX-mapPanelLength)/2) , mapPanelLength));
+        menuPanel.setPreferredSize(new Dimension(menuPanelWidth, mapPanelLength));
+        sidePanel.setPreferredSize(new Dimension(maxX-mapPanelLength-menuPanelWidth, mapPanelLength));
         bottomSidePanel.setPreferredSize(new Dimension(((maxX-optionsPanLength)/2), optionsPanHeight));
 
         bottomPanel.setLayout(new BorderLayout());
         bottomPanel.add(optionsPanel, BorderLayout.CENTER);
-        //bottomPanel.add(optionsPanel);
         bottomPanel.add(bottomSidePanel, BorderLayout.WEST);
 
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(mapPanel, BorderLayout.CENTER);
         mainPanel.add(sidePanel, BorderLayout.WEST);
+        mainPanel.add(menuPanel, BorderLayout.EAST);
         mainPanel.add(bottomPanel, BorderLayout.PAGE_END);
         bottomPanel.setVisible(false);
 
@@ -73,6 +85,9 @@ public class GameFrame extends JFrame {
                 bottomPanel.setVisible(true);
             } else {
                 bottomPanel.setVisible(false);
+            }
+            if (turnEnd){
+                frame.dispose();
             }
         }
     }

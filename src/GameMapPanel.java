@@ -39,7 +39,7 @@ class GameMapPanel extends JPanel{
     private static Image redTarget = Toolkit.getDefaultToolkit().getImage("assets/RedTarget.png");
     private static Image greyTarget = Toolkit.getDefaultToolkit().getImage("assets/GreyTarget.png");
     private static Image grassImage = Toolkit.getDefaultToolkit().getImage("assets/Grass.png");
-    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("assets/Water.jpg");
+    private static Image waterImage = Toolkit.getDefaultToolkit().getImage("assets/Water.png");
     private static Image mountainImage = Toolkit.getDefaultToolkit().getImage("assets/Mountain.png");
     private static Image cityImage = Toolkit.getDefaultToolkit().getImage("assets/ImperiusCity1.png");
     private static Image animalImage = Toolkit.getDefaultToolkit().getImage("assets/Animal.png");
@@ -57,6 +57,7 @@ class GameMapPanel extends JPanel{
         this.map = map;
         interactions = new Interactions(map);
 
+        this.setBackground(Color.black);
         setSize(new Dimension(height, height));
         tileDim = (height/map.getMap().length);
 

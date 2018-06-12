@@ -58,7 +58,7 @@ class GameFrameTwo extends JFrame {
         this.setLocationRelativeTo(null); //start the frame in the center of the screen
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable (false);
-        this.setBackground(Color.black);
+
         try{
             backButtonPic = ImageIO.read(new File("assets/backbutton.png"));
         } catch (IOException e){
@@ -70,6 +70,7 @@ class GameFrameTwo extends JFrame {
         backButton.setMaximumSize(new Dimension (backButtonPic.getWidth(),backButtonPic.getHeight()));
         backButton.setContentAreaFilled(false);
         backButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        backButton.setFocusable(false);
 
         GameAreaPanel mainPanel = new GameAreaPanel();
 
@@ -109,10 +110,14 @@ class GameFrameTwo extends JFrame {
             Font font1 = new Font(Font.SANS_SERIF, Font.PLAIN, 15);
             FontMetrics fontMetrics = g.getFontMetrics(font1);
             Image background = Toolkit.getDefaultToolkit().getImage("assets/background3.png");
-            g.drawImage(background,0,0,null);
-            setDoubleBuffered(true);
-            g.setColor(new Color(255, 128, 233)); //There are many graphics commands that Java can use
+            g.drawImage(background,0,0,this);
+
+            g.setColor(new Color(1,1,1, 150)); //There are many graphics commands that Java can use
             g.fillRect(0, 200, maxX, 30); //notice the x,y variables that we control from our animate method
+            g.fillRect(0, 400, maxX, 30);
+            g.fillRect(0, 600, maxX, 30);
+            g.fillRect(0, 800, maxX, 30);
+            g.fillRect(0, 1000, maxX, 30);
             g.setColor(new Color(255, 255, 255));
             g.setFont(font1);
             g.drawString(name.toLowerCase(), (maxX-fontMetrics.stringWidth(name.toLowerCase()))/2, 220);

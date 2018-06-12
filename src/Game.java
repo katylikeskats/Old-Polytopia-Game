@@ -17,17 +17,20 @@ public class Game{
     public void turn(){
         do {
             for (int i = 0; i < players.size(); i++){
+                try{Thread.sleep(500);} catch (InterruptedException e){}
                 new GameFrame(map, players.get(i).getMask(), players.get(i));
                 //System.out.println(players.get(i).getCurrency());
                 players.get(i).turnCurrencyIncrease();
                 //System.out.println(players.get(i).getCurrency());
-                players.get(i).addTechnology("Animal"); //Temp for testing
+                /*players.get(i).addTechnology("Animal"); //Temp for testing
                 players.get(i).addTechnology("Fruit");
                 players.get(i).addTechnology("Fish");
                 players.get(i).addTechnology("Forest");
                 players.get(i).addTechnology("Crop");
-                players.get(i).addTechnology("Whale");
+                players.get(i).addTechnology("Whale");*/
                 players.get(i).turn();
+                players.get(i).setTurnEnd(false);
+                GameFrame.turnEnd = false;
             }
         } while (!gameEnd);
     }

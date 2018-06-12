@@ -14,6 +14,7 @@ public class RoundButton extends JButton {
     public RoundButton(int radius, ImageIcon image) {
         super(image);
         Dimension size = new Dimension(radius, radius);
+        setFocusable(false);
         setPreferredSize(size);
         setBorderPainted(false);
         setContentAreaFilled(false);

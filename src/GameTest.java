@@ -21,6 +21,7 @@ class GameTest {
                 if (map.getMap()[i][j].getCity() != null) {
                     if (map.getMap()[i][j].getCity().isCapital()) {
                         tempPlayer = new Player(map.getMap()[i][j].getCity(), map.getMap()[i][j].getCity().getTribe(), interactions, map.getMapLength());
+                        tempPlayer.addTechnology("StartingTech");
                         players.add(tempPlayer);
                     }
                 }

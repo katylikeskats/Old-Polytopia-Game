@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator; //When does the iterator reset to start
 
 public class Player {
+    private String name;
     private int tribe;
     private int currency;
     private ArrayList<String> technology = new ArrayList<String>();
@@ -15,7 +16,7 @@ public class Player {
     private boolean citySelected;
     private boolean landSelected;
     private boolean confirmAction;
-    private boolean turnEnd;
+    private boolean turnEnd = false;
     private int selMapRow;
     private int selMapCol;
 
@@ -25,6 +26,9 @@ public class Player {
     boolean[][] mask;
     private Interactions handler;
 
+    public Player(){
+
+    }
 
     public Player(City city, int tribe, Interactions interaction, int mapLength) {
         this.tribe = tribe;
@@ -128,13 +132,17 @@ public class Player {
 
     public void turn(){
         while(!turnEnd){
-            if (citySelected){
+            //if (citySelected){
                 //    interaction.displayUnits();
-            }
+            //}
             // if (confirmAction()){
             //   if (){
             // }
             // }
+            //System.out.println("While Loop"+this.getTurnEnd());
+            try {Thread.sleep(500);} catch (InterruptedException e){
+
+            }
         }
     }
 
@@ -153,4 +161,15 @@ public class Player {
     public void setTierTwoCost(int tierTwoCost) {
         this.tierTwoCost = tierTwoCost;
     }
+
+    public void setTurnEnd(boolean turnEnd) {
+        this.turnEnd = turnEnd;
+    }
+    public boolean getTurnEnd(){
+        return this.turnEnd;
+    }
+    public String getName() {
+        return name;
+    }
+
 }
