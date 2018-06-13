@@ -1,0 +1,15 @@
+//At the start of each player's turn, if the player's unit is on a city that is marked as being captured, capture the city
+    public void cityCapturingCheck(Player player) {
+      for (int i = 0; i < map.getMap().length; i++) {
+        for (int j = 0; j < map.getMap().length; j++) {
+          if (map.getMap()[i][j].getCity() != null) {
+            if ((map.getMap()[i][j].getCity().getCapturing()) && (map.getMap()[i][j].getUnit() != null)) {
+              if ((map.getMap()[i][j].getUnit().getTribe() != map.getMap()[i][j].getCity().getTribe()) && (map.getMap()[i][j].getUnit().getTribe() == player.getTribe())) {
+                map.getMap()[i][j].getCity().setCapturing(false); //Change capturing parameter
+                captureCity(map.getMap()[i][j].getCity(), map.getMap()[i][j].getUnit());
+              }
+            }
+          }
+        }
+      }
+    }
