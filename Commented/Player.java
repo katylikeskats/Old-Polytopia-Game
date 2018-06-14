@@ -32,7 +32,7 @@ public class Player {
     private int tierTwoCost; //Currency cost of purchasing a tier two technology
 
     boolean[][] mask; //The masked area that the player cannot see
-    private Interactions handler; //Interactions object to perform map interactions in-game
+    private Interactions interaction; //Interactions object to perform map interactions in-game
 
     /**
      * Player
@@ -99,11 +99,17 @@ public class Player {
      */
     public void turnCurrencyIncrease() { //Calculate star increase for a given turn (at a given moment)
         int currencyIncrease = 0;
-        for (int i = 0; i < cities.size(); i++) {
-            if (cities.get(i).isCapital()) {
-                currencyIncrease += (cities.get(i).getLevel() + 1); //Increase currencyIncrease by 1 more than the city's level for a capital city
-            } else {
-                currencyIncrease += cities.get(i).getLevel(); //Increase currencyIncrease by the city's level for a non-capital city
+        for (int i = 0; i < mapLength; i++) {
+            for (int j = 0; j < mapLength; j++) {
+                if (interaction.getTileMap()[i][j].getCity() != null) {
+                    if (interaction.getTileMap()[i][j].getCity().getTribe() == this.tribe) {
+                        if (interaction.getTileMap()[i][j].getCity().isCapital()) {
+                            currencyIncrease += (interaction.getTileMap()[i][j].getCity().getLevel() + 1); //Increase currencyIncrease by 1 more than the city's level for a capital city
+                        } else {
+                            currencyIncrease += interaction.getTileMap()[i][j].getCity(); //Increase currencyIncrease by the city's level for a non-capital city
+                        }
+                    }
+                }
             }
         }
         currency += currencyIncrease; //Add to the player's currency
