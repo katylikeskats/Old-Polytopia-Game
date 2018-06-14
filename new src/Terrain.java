@@ -19,7 +19,6 @@ abstract public class Terrain {
     Terrain(int r, int c){
         this.r = r; //Set the row coordinate
         this.c = c; //Set the column coordinate
-        defenseMultiplier = 1; //Set the value of the defense multiplier (which is terrain-dependent)
     }
 
     /**
