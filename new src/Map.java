@@ -1,7 +1,12 @@
-//Have a map checker later to check if the random map is usable
+/**
+* [Map.java]
+* This program is the map that stores spaces on the game's map
+* Authors: Katelyn Wang & Brian Li
+* Date: June 14, 2018
+*/
 
 class Map {
-
+    
     private static int MAP_LENGTH;
     private int numPlayers;
     private Space[][] tileMap;
@@ -23,6 +28,8 @@ class Map {
         int random = 0;
 
         //Creating land
+        //The section below sets the parameters for row and column boundaries within which land (grass) will be generated
+        //The goal is to generate a map with a block of land in each quartile
         for (int i = 0; i < 4; i++) {
             do {
                 if (i == 0) {
@@ -54,8 +61,8 @@ class Map {
                     randR = ((int)Math.round(Math.random()*((MAP_LENGTH-1)/4))) + ((MAP_LENGTH-1)*3/4);
                     randC = ((int)Math.round(Math.random()*((MAP_LENGTH-1)/4))) + ((MAP_LENGTH-1)*3/4);
                 }
-                expandLand(randR, randC, 0, lowerR, higherR, lowerC, higherC);
-            } while (!checkCoverage(i));
+                expandLand(randR, randC, 0, lowerR, higherR, lowerC, higherC); //Run the method that will recursively add grass space tiles within a quartile
+            } while (!checkCoverage(i)); //Run the recursive method until there is enough land
 
         }
 
@@ -75,118 +82,139 @@ class Map {
         //A tribe (int) is also assigned to each capital city (other cities are given tribes when captured by a player)
         assignCapitals();
 
-        //Designate which items belong to which cities (right now ONLY FOR THE ITEMS WITHIN ONE TILE OF THE CITY)
+        //Designate which items belong to which cities
         assignCitiesItems();
 
     }
 
+    /**
+    * expandLand
+    * This method (recursive) randomly selects a direction to create another land tile in (or to stop the recursive call) and recurses
+    * @param integer row and column coordinates, an integer of the randomly selected choice, and integers for the row and column boundaries (of the quartile)
+    */
     private void expandLand(int r, int c, int choice, int lowerR, int higherR, int lowerC, int higherC) {
         tileMap[r][c] = new Space(new Grass(r, c));
         choice = (int)(Math.round(Math.random()*20));
-        if (choice < 5) {
+        if (choice < 5) { //Expand land right
             if (c < higherC) {
                 expandLand(r, c + 1, choice, lowerR, higherR, lowerC, higherC);
             } else {
                 choice = (int)Math.round(Math.random()*20);
             }
         }
-        if ((choice > 4) && (choice < 10)) {
+        if ((choice > 4) && (choice < 10)) { //Expand land left
             if (c > lowerC) {
                 expandLand(r, c - 1, choice, lowerR, higherR, lowerC, higherC);
             } else {
                 choice = (int)Math.round(Math.random()*20);
             }
         }
-        if ((choice > 9) && (choice < 15)) {
+        if ((choice > 9) && (choice < 15)) { //Expand land down
             if (r < higherC) {
                 expandLand(r + 1, c, choice, lowerR, higherR, lowerC, higherC);
             } else {
                 choice = (int)Math.round(Math.random()*20);
             }
         }
-        if ((choice > 14) && (choice < 20)) {
+        if ((choice > 14) && (choice < 20)) { //Expand land up
             if (r > lowerC) {
                 expandLand(r - 1, c, choice, lowerR, higherR, lowerC, higherC);
             } else {
                 choice = (int)Math.round(Math.random()*20);
             }
         }
-        if (choice == 20) {
+        if (choice == 20) { //stop the recursive call
             return;
         }
     }
 
+    /**
+    * checkCoverage
+    * This method checks if there is enough land in a quartile of a map (relative to the number of tiles in that quartile)
+    * @param an integer representing the quartile of the map being checked
+    * @return a boolean, true if there is enough land coverage, false if otherwise
+    */
     private boolean checkCoverage(int quartile) {
         int numLandTiles = 0;
         int numTiles = (int)(Math.pow((MAP_LENGTH/2),2));
-        if (quartile == 0) {
+        if (quartile == 0) { //First (top left) quartile
             for (int i = 0; i < MAP_LENGTH/2; i++) {
                 for (int j = 0; j < MAP_LENGTH/2; j++) {
                     if (tileMap[i][j] != null) {
                         if (tileMap[i][j].getTerrain() instanceof Grass) {
-                            numLandTiles++;
+                            numLandTiles++; //Count the number of land tiles in the quartile
                         }
                     }
                 }
             }
-        } else if (quartile == 1) {
+        } else if (quartile == 1) { //Second (top right) quartile
             for (int i = 0; i < MAP_LENGTH/2; i++) {
                 for (int j = MAP_LENGTH/2; j < MAP_LENGTH; j++) {
                     if (tileMap[i][j] != null) {
                         if (tileMap[i][j].getTerrain() instanceof Grass) {
-                            numLandTiles++;
+                            numLandTiles++; //Count the number of land tiles in the quartile
                         }
                     }
                 }
             }
-        } else if (quartile == 2) {
+        } else if (quartile == 2) { //Third (bottom left) quartile
             for (int i = MAP_LENGTH/2; i < MAP_LENGTH; i++) {
                 for (int j = 0; j < MAP_LENGTH/2; j++) {
                     if (tileMap[i][j] != null) {
                         if (tileMap[i][j].getTerrain() instanceof Grass) {
-                            numLandTiles++;
+                            numLandTiles++; //Count the number of land tiles in the quartile
                         }
                     }
                 }
             }
-        } else {
+        } else { //Fourth (bottom right) quartile
             for (int i = MAP_LENGTH/2; i < MAP_LENGTH; i++) {
                 for (int j = MAP_LENGTH/2; j < MAP_LENGTH; j++) {
                     if (tileMap[i][j] != null) {
                         if (tileMap[i][j].getTerrain() instanceof Grass) {
-                            numLandTiles++;
+                            numLandTiles++; //Count the number of land tiles in the quartile
                         }
                     }
                 }
             }
         }
-        if (numLandTiles > 0.4*numTiles) {
-            return true;
+        if (numLandTiles > 0.4*numTiles) { //Check the ratio of the tiles
+            return true; 
         } else {
             return false;
         }
     }
 
+    /**
+    * addCities
+    * This method adds cities to the map
+    */
     private void addCities() {
         int random2 = 0;
         for (int i = 1; i < MAP_LENGTH-1; i++) {
             for (int j = 1; j < MAP_LENGTH-1; j++) {
-                if (tileMap[i][j].getTerrain() instanceof Grass) {
+                if (tileMap[i][j].getTerrain() instanceof Grass) { //Make cities on grass tiles only
                     random2 = (int)(Math.round(Math.random()*18));
                     if (!adjacentCity(i, j) && (random2 < 3)) {
-                        tileMap[i][j].setCity(new City(i, j, false)); //DETRMINE CAPITAL CITY in a dif method - Can do quartile check, in each one find a city surrounded by at lest 5 land tiles
+                        tileMap[i][j].setCity(new City(i, j, false)); //If randomly chosen and not in proximity of another city, create a city there (right now set as not a capital)
                     }
                 }
             }
         }
     }
 
+    /**
+    * adjacentCity
+    * This method checks if the city with the coordinates inputted is in range of any other city
+    * @param the row and column coordinates (ints) of the possible city location checked
+    * @return boolean, true if there is a city in proximity, false if not
+    */
     private boolean adjacentCity(int cityR, int cityC) {
         for (int i = 0; i < MAP_LENGTH; i++) {
             for (int j = 0; j < MAP_LENGTH; j++) {
                 if (tileMap[i][j] != null) {
                     if (tileMap[i][j].getCity() != null) {
-                        if (((Math.abs(cityR - i)) <= 2) && ((Math.abs(cityC - j)) <= 2)) { //Maybe change condition format
+                        if (((Math.abs(cityR - i)) <= 2) && ((Math.abs(cityC - j)) <= 2)) {
                             return true;
                         }
                     }
@@ -196,6 +224,10 @@ class Map {
         return false;
     }
 
+    /**
+    * addWater
+    * This method adds water tiles to the map (generating space objects with water terrain for all non-grass tiles)
+    */
     private void addWater() {
         for (int i = 0; i < MAP_LENGTH; i++) {
             for (int j = 0; j < MAP_LENGTH; j++) {
@@ -206,7 +238,11 @@ class Map {
         }
     }
 
-    private void addItems() { //Maybe too many items? Othewise it's fine
+    /**
+    * addItems
+    * This method adds the resources to the map (randomly), only if within 2 spaces of a city
+    */
+    private void addItems() {
         int random3 = 0;
         for (int i = 0; i < MAP_LENGTH; i++) {
             for (int j = 0; j < MAP_LENGTH; j++) {
@@ -238,6 +274,10 @@ class Map {
         }
     }
 
+    /**
+    * addMountains
+    * This method adds mountains to tiles that are currently grass tiles (randomly)
+    */
     private void addMountains() {
         int randRow = 0;
         int randColumn = 0;
@@ -250,7 +290,7 @@ class Map {
                     if ((tileMap[i][j].getTerrain() instanceof Grass) && (tileMap[i][j].isEmpty())) {
                         randValue = (int)(Math.round(Math.random()));
                         if (randValue == 0) {
-                            tileMap[i][j] = new Space(new Mountain(i, j));
+                            tileMap[i][j] = new Space(new Mountain(i, j)); //Create a mountain
                         }
                     }
                 }
@@ -409,8 +449,7 @@ class Map {
         }
         return numLandTilesSurrounding;
     }
-
-    //Will also need to be used whenever cities expand borders (are we doing that)
+    
     public void assignCitiesItems() {
 
         for (int i = 0; i < MAP_LENGTH; i++) {
@@ -428,26 +467,6 @@ class Map {
                 }
             }
         }
-
-      /* This part assigns items that are within a radius of 2 (not done at the beginning)
-      for (int i = 0; i < MAP_LENGTH; i++) {
-        for (int j = 0; j < MAP_LENGTH; j++) {
-          if (tileMap[i][j].getCity() != null) {
-            for (int a = (i - 2); a < (i + 3); a++) {
-              for (int b = (j - 2); b < (j + 3); b++) {
-                if ((a > 0) && (a < MAP_LENGTH) && (b > 0) && (b < MAP_LENGTH)) {
-                  if (tileMap[a][b].getResource() != null) {
-                    if (tileMap[a][b].getResource().getCity() == null) {
-                      tileMap[a][b].getResource().setCity(tileMap[i][j].getCity());
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      */
 
     }
 
