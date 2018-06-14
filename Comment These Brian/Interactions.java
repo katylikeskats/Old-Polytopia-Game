@@ -314,12 +314,12 @@ public class Interactions {
     }
 
     /**
-     *
-     * @param city
-     * @param unit
+     * captureCity
+     * This method captures a city when a unit of a different tribe has been on it for a turn
+     * @param A city object representing the city that is being captured
+     * @param A unit object representing the unit that is capturing the city
+     * @return nothing
      */
-    //CAPTURE CITY METHOD
-    //NEED TO: Change the unit capturing it's city to the city that got captured, set the tribe ofthe city to the same as the player whose unit captured it
     public void captureCity(City city, Unit unit) {
         city.setTribe(unit.getTribe()); //Set the tribe of the city to that of the unit capturing it
         unit.getCity().setCurrUnits(unit.getCity().getCurrUnits() - 1); //Decrease number of units in the city that the unit capturing the new city was from
@@ -328,13 +328,16 @@ public class Interactions {
     }
 
     /**
-     *
+     * resetMove
+     * This method goes through the entire game's map, setting the moved flag (that dictates whether a unit has moved or not in a turn), used at the beginning of each player's turn
+     * @param nothing
+     * @return nothing
      */
     public void resetMove(){
         for (int i = 0; i < map.getMap().length; i++){
             for (int j = 0; j < map.getMap().length; j++){
-                if (map.getMap()[i][j].getUnit() != null){
-                    map.getMap()[i][j].getUnit().setMoved(false);
+                if (map.getMap()[i][j].getUnit() != null){ //For each unit ...
+                    map.getMap()[i][j].getUnit().setMoved(false); //Set the unit's moved value to false (not having moved yet that turn)
                 }
             }
         }
