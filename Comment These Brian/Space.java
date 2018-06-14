@@ -127,19 +127,23 @@ public class Space{
     }
 
     /**
-     *
-     * @return
+     * getResource
+     * This method returns the resource held by the space object
+     * @param nothing
+     * @return A resource object representing the resource held in the space
      */
     public Resource getResource() {
-        return resource;
+        return resource; //Return the resource
     }
 
     /**
-     *
-     * @param resource
+     * setResource
+     * This method sets the resource held by the space
+     * @param A resource object representing the resource that is to be set in the space
+     * @return nothing
      */
     public void setResource(Resource resource) {
-        this.resource = resource;
+        this.resource = resource; //Set the resource
     }
 
     /**
