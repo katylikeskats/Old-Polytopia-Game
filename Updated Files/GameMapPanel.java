@@ -24,6 +24,7 @@ class GameMapPanel extends JPanel{
     private static boolean unitSelected;
     private static boolean citySelected;
     private static boolean resourceSelected;
+    private static boolean waterSelected; //To mark if a water tile (without fish or whales) is selected (for port building)
     
     private static boolean resourceHarvest; 
     private static boolean trainUnit;
@@ -385,6 +386,14 @@ class GameMapPanel extends JPanel{
     
     public static void setTrainUnitType(String type) {
       trainUnitType = type;
+    }
+    
+    public static void setWaterSelected(boolean selected) {
+      waterSelected = selected;
+    }
+    
+    public static boolean getWaterSelected() {
+      return waterSelected;
     }
     
 }

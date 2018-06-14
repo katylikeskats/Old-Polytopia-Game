@@ -178,5 +178,30 @@ public class Interactions {
         }
       }
     }
+    
+    public boolean portCheck(int row, int column) {
+      if (withinCity(row, column)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    private boolean withinCity(int row, int column) {
+      for (int i = 0; i < map.getMap().length; i++) {
+        for (int j = 0; j < map.getMap().length; j++) {
+          if (map.getMap()[i][j].getCity() != null) {
+            if ((Math.abs(row - i) < 2) && (Math.abs(column - j) < 2)) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    
+    public void makePort(int row, int column) {
+      map.getMap()[row][column].setTerrain(new Port(row, column));
+    }
 
 }

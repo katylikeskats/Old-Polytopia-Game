@@ -62,7 +62,7 @@ public class MapMouseListener implements MouseListener {
       GameMapPanel.setTrainUnit(false);
       
       if (!GameMapPanel.getResourceSelected()) {
-        GameMapPanel.setResourceSelected(true); //Ok at least this part works
+        GameMapPanel.setResourceSelected(true);
         GameFrame.displayOptions = true;
         OptionsPanel.showResource = true;
       } else {
@@ -78,6 +78,24 @@ public class MapMouseListener implements MouseListener {
       GameMapPanel.setTrainUnit(false);
       GameFrame.displayOptions = false;
       OptionsPanel.showResource = true;
+    } else if (option == 6) {
+      GameMapPanel.setResourceSelected(false);
+      GameMapPanel.setUnitSelected(false);
+      GameMapPanel.setCitySelected(false);
+      GameMapPanel.setResourceHarvest(false);
+      GameMapPanel.setTrainUnit(false);
+      OptionsPanel.showResource = false;
+      OptionsPanel.showUnit = false;
+      
+      if (!GameMapPanel.getWaterSelected()) {
+        GameMapPanel.setWaterSelected(true);
+        GameFrame.displayOptions = true;
+        OptionsPanel.showPort = true;
+      } else {
+        GameMapPanel.setWaterSelected(false);
+        GameFrame.displayOptions = false;
+        OptionsPanel.showPort = false;
+      }
     }
   }
   
@@ -99,6 +117,8 @@ public class MapMouseListener implements MouseListener {
                 return 2; //If nothing is selected, then a city is clicked on
               } else if (map.getMap()[r][c].containsResource()){
                 return 3; //If nothing is selected, then a resource is clicked on
+              } else if (map.getMap()[r][c].getTerrain() instanceof Water) {
+                return 6;
               } else {
                 return 5; //If a blank spot is clicked on
               }
