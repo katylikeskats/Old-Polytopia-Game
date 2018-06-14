@@ -33,7 +33,7 @@ public class Game{
           }
         }
       } while (!checkGameEnd());
-      //SOMETHING TO DISPLAY WINNER!!!!!
+      System.out.println(getWinnerName() + " has won!"); //Sample (use the method though)
     }
     
     private boolean checkGameEnd() {
@@ -74,6 +74,10 @@ public class Game{
           }
         }
       }
+    }
+    
+    private String getWinnerName() {
+        players.get(i).getName(); //Return the name of the only player left
     }
     
 }
