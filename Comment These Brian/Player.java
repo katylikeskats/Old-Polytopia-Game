@@ -110,66 +110,83 @@ public class Player {
     }
 
     /**
-     *
-     * @return
+     * getTribe
+     * This method returns the tribe of the player
+     * @param nothing
+     * @return An integer representing the player's tribe
      */
     public int getTribe() {
-        return tribe;
+        return tribe; //Return the tribe
     }
 
     /**
-     *
-     * @param tribe
+     * setTribe
+     * This method sets the tribe of a player
+     * @param tribe, An integer representing the tribe being set
+     * @return nothing
      */
     public void setTribe(int tribe) {
-        this.tribe = tribe;
+        this.tribe = tribe; //Set the tribe
     }
 
     /**
-     *
-     * @return
+     * getCurrency
+     * This method returns the player's currency
+     * @param nothing
+     * @return An integer representing the player's currency
      */
     public int getCurrency() {
-        return currency;
+        return currency; //Return the currency
     }
 
     /**
-     *
-     * @param currency
+     * setCurrency
+     * This method sets a player's currency
+     * @param currency, an integer representing the currency being set
+     * @return nothing
      */
     public void setCurrency(int currency) {
-        this.currency = currency;
+        this.currency = currency; //Set the currency
     }
 
     /**
-     *
-     * @return
+     * getTechnology
+     * This method returns the list of a player's technology
+     * @param nothing
+     * @return technology, the list of a player's technology (tech tree name)
      */
     public ArrayList<String> getTechnology() {
-        return technology;
+        return technology; //Return the technology
     }
 
     /**
-     *
+     * setTechnology
+     * This method sets a player's list of technology
      * @param technology
+     * @return nothing
      */
     public void setTechnology(ArrayList<String> technology) {
         this.technology = technology;
     }
 
     /**
-     *
-     * @return
+     * getMask
+     * This method returns a player's array of masked spaces
+     * @param nothing
+     * @return the player's mask array
      */
     public boolean[][] getMask() {
-        return mask;
+        return mask; //Return the mask array
     }
 
     /**
-     *
+     * turn
+     * This method runs a player's turn
+     * @param nothing
+     * @return nothing
      */
     public void turn(){
-        interaction.cityCapturingCheck(this);
+        interaction.cityCapturingCheck(this); //Check if any cities are to be captured by the player at the start of the turn
         while(!turnEnd){
             try {Thread.sleep(500);} catch (InterruptedException e){
             }
@@ -178,63 +195,79 @@ public class Player {
     }
 
     /**
-     *
-     * @return
+     * getTierOneCost
+     * This method returns the cost of tier one technology
+     * @param nothing
+     * @return an integer representing the currency cost of tier one technology
      */
     public int getTierOneCost() {
         return tierOneCost;
     }
 
     /**
-     *
-     * @param tierOneCost
+     * setTierOneCost
+     * This method sets the cost of tier one technology
+     * @param tierOneCost, the currency cost of tier one technology
+     * @return nothing
      */
     public void setTierOneCost(int tierOneCost) {
         this.tierOneCost = tierOneCost;
     }
 
     /**
-     *
-     * @return
+     * getTierTwoCost
+     * This method returns the cost of tier two technology
+     * @param nothing
+     * @return an integer representing the currency cost of tier two technology
      */
     public int getTierTwoCost() {
         return tierTwoCost;
     }
 
     /**
-     *
-     * @param tierTwoCost
+     * setTierTwoCost
+     * This method sets the cost of tier two technology
+     * @param tierTwoCost, the currency cost of tier two technology
+     * @return nothing
      */
     public void setTierTwoCost(int tierTwoCost) {
         this.tierTwoCost = tierTwoCost;
     }
 
     /**
-     *
-     * @param turnEnd
+     * setTurnEnd
+     * This method sets a player's turn to end
+     * @param turnEnd, which flags whether the player's turn is to end
+     * @return nothing
      */
     public void setTurnEnd(boolean turnEnd) {
         this.turnEnd = turnEnd;
     }
 
     /**
-     *
-     * @return
+     * getName
+     * This method returns the player's name
+     * @param nothing
+     * @return A string representing the player's name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @return
+     * getPractical
+     * This method returns the list of corresponding class names to technology owned
+     * @return An arraylist representing the above
      */
     public ArrayList<String> getPractical(){
         return this.practical;
     }
 
     /**
-     *
+     * increaseCosts
+     * This method increases the costs of technology
+     * @param nothing
+     * @return nothing
      */
     public void increaseCosts(){
         this.tierOneCost++;
