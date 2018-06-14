@@ -48,22 +48,25 @@ public class Interactions {
     }
 
     /**
-     *
-     * @param unit
+     * die
+     * This method removes a unit from the map and edits the unit count of the city that the unit belonged to
+     * @param A unit object that represents the unit that has died (health reached 0 or below)
+     * @return nothing
      */
     private void die(Unit unit){
-        City city = unit.getCity();
+        City city = unit.getCity(); //Set the city that the unit belongs to
         city.setCurrUnits(city.getCurrUnits() - 1); //Decrease number of units of the city whose unit died
-        map.getMap()[unit.getR()][unit.getC()].setUnit(null);
+        map.getMap()[unit.getR()][unit.getC()].setUnit(null); //Remove the unit from the map
     }
 
     /**
-     *
-     * @param unit
-     * @param newR
-     * @param newC
-     * @param player
-     * @return
+     * validateAttack
+     * This method checks whether input for a requested attack (based on whether two diffeent units were selected in succession) is valid
+     * @param A unit object representing the unit that will perform the attack
+     * @param An integer representing the row coordinate of the spot on the map that would hold the unit being attacked (if validated)
+     * @param An integer representing the column coordinate of the spot on the map that would hold the unit being attacked (if validated)
+     * @param A player object representing the player that is trying to executing the attack (or checking for its validation)
+     * @return A boolean variable representing whether or not an input for an attack is a valid attack
      */
     public boolean validateAttack(Unit unit, int newR, int newC, Player player) {
         if ((player.getTribe() != map.getMap()[newR][newC].getUnit().getTribe()) && (Math.abs(unit.getR() - newR) <= unit.getRange()) && (Math.abs(unit.getC() - newC) <= unit.getRange())) {
@@ -129,41 +132,43 @@ public class Interactions {
     }
 
     /**
-     *
-     * @param list
-     * @param item
-     * @return
+     * contains
+     * This method checks whether a string is present in an arraylist of strings
+     * @param An ArrayList of Strings that represents the list being searched from
+     * @param A string that represents the string that is being searched for in the list
+     * @return true if the string is found in the list, and false if it is not
      */
     public boolean contains(ArrayList<String> list, String item){
         for (int i = 0; i < list.size(); i++){
             if (list.get(i).equals(item)){
-                return true;
+                return true; //Return true if the item is found in the list
             }
         }
-        return false;
+        return false; //Return false if it is not found in the list
     }
 
     /**
-     *
-     * @param player
-     * @param r
-     * @param c
-     * @return
+     * harvestItem
+     * This method checks whether a resource selected can be harvested or not, and harvests it if it is a valid interaction
+     * @param A player object representing the player trying to harvest a resource
+     * @param An integer representing the row coordinate of the resource trying to be harvested
+     * @param An integer representing the column coordinate of the resource trying to be harvested
+     * @return true if the item can (and is) harvested, and false if it is not
      */
-    //ISSUE - After levelling up, it doesn't give the city population anymore???
-    public boolean harvestItem (Player player, int r, int c){
+    public boolean harvestItem (Player player, int r, int c){\
+        //Perform check only if the item actually has a city (since harvesting it benefits a city)
         if (map.getMap()[r][c].getResource().getCity() != null) {
+            //Check if the player has enough currency and the required technology to harvest the resource, and that the player's and resource's city's tribes are the same
             if ((player.getCurrency() >= map.getMap()[r][c].getResource().getCost()) && (contains(player.getPractical(), map.getMap()[r][c].getResource().getClass().getSimpleName())) &&(map.getMap()[r][c].getResource().getCity().getTribe() == player.getTribe())){
-                player.setCurrency(player.getCurrency() - map.getMap()[r][c].getResource().getCost());
-                map.getMap()[r][c].getResource().getCity().increasePop(map.getMap()[r][c].getResource().getPopIncrease());
-                //System.out.println(map.getMap()[r][c].getResource().getCity().getCurrPop());
-                map.getMap()[r][c].setResource(null);
-                return true;
+                player.setCurrency(player.getCurrency() - map.getMap()[r][c].getResource().getCost()); //Decrease the player's currency by the cost of the resource
+                map.getMap()[r][c].getResource().getCity().increasePop(map.getMap()[r][c].getResource().getPopIncrease());  //Increase the city's population by the given population increase of the resource
+                map.getMap()[r][c].setResource(null); //Set the harvested resource object to null
+                return true; //Return true if the resource can and has been harvested
             } else {
-                return false;
+                return false; //Return false if the resource has a city, but the player cannot harvest it
             }
         } else {
-            return false;
+            return false; //Return false if the resource has no city
         }
     }
 
