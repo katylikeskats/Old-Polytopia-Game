@@ -72,34 +72,41 @@ public class Player {
     }
 
     /**
-     *
-     * @param technology
+     * addTechnology
+     * This method adds the technology that a player has bought to their list of owned technology names
+     * @param technology, a string representing the name of the technology being added
+     * @return nothing
      */
     public void addTechnology(String technology){
-        this.technology.add(technology);
+        this.technology.add(technology); //Add the technology
     }
 
     /**
-     *
-     * @param technology
+     * addTechnology
+     * This method adds the practical (corresponding class name) of the technology that a player has bought to their list of owned technology names
+     * @param technology, a string representing the name of the class corresponding to the technology being added
+     * @return nothing
      */
     public void addPractical(String technology){
-        this.practical.add(technology);
+        this.practical.add(technology); //Add the class name
     }
 
     /**
-     *
+     * turnCurrencyIncrease
+     * This method calculates the currency increase of a player at the start of their turn given the number of and level of cities, and adds it to the player's current currency value
+     * @param nothing
+     * @return nothing
      */
     public void turnCurrencyIncrease() { //Calculate star increase for a given turn (at a given moment)
         int currencyIncrease = 0;
         for (int i = 0; i < cities.size(); i++) {
             if (cities.get(i).isCapital()) {
-                currencyIncrease += (cities.get(i).getLevel() + 1);
+                currencyIncrease += (cities.get(i).getLevel() + 1); //Increase currencyIncrease by 1 more than the city's level for a capital city
             } else {
-                currencyIncrease += cities.get(i).getLevel();
+                currencyIncrease += cities.get(i).getLevel(); //Increase currencyIncrease by the city's level for a non-capital city
             }
         }
-        currency += currencyIncrease;
+        currency += currencyIncrease; //Add to the player's currency
     }
 
     /**
