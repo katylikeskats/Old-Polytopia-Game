@@ -53,20 +53,29 @@ public class Interactions {
         return ((contains(player.getTechnology(), map.getMap()[newR][newC].getTerrainName())) && (newR >= 0) && (newC >= 0) && (newR < map.getMap().length) && (newC < map.getMap().length) && (map.getMap()[newR][newC].getUnit() == null) && (Math.abs(unit.getR() - newR) <= unit.getMovement()) && (Math.abs(unit.getC() - newC) <= unit.getMovement()) && !(mask[newR][newC]) && (player.getTribe() == unit.getTribe()));
     }
 
-    //IMPORTANT - PORTS HAVE TO BE GRASS SINCE ANYONE CAN MOVE ON THEM
     public void move (Unit unit, int newR, int newC, boolean[][] mask){
-      if ((map.getMap()[newR][newC].getTerrainName().equals("Water")) && !(unit instanceof Boat)){ //Should be PORT instead of water
+      if ((map.getMap()[newR][newC].getTerrain() instanceof Port) && !(unit instanceof Boat)){
         map.getMap()[newR][newC].setUnit(new Boat(newR, newC, unit)); //Take into account prev unit's health?
         map.getMap()[unit.getR()][unit.getC()].setUnit(null);
+        unit.setR(newR); //Change the position of the unit in the unit object
+        unit.setC(newC);
       } else if ((unit instanceof Boat) && (map.getMap()[newR][newC].getTerrain() instanceof Water)) {
         map.getMap()[unit.getR()][unit.getC()].setUnit(null); //Move a boat normally (like a unit would on land) if it moves onto a water tile
         map.getMap()[newR][newC].setUnit(unit);
+        unit.setR(newR); //Change the position of the unit in the unit object
+        unit.setC(newC);
+        ((Boat)(unit)).getUnitContained().setR(newR); //Set the unit inside's r value as well
+        ((Boat)(unit)).getUnitContained().setC(newC); //Set the unit inside's c value as well
       } else if (unit instanceof Boat) {
         map.getMap()[unit.getR()][unit.getC()].setUnit(null); //If a boat moves onto a land tile, put the unit inside it onto the land tile
         map.getMap()[newR][newC].setUnit(((Boat)(unit)).getUnitContained()); //Cast a boat into the unit
+        map.getMap()[newR][newC].getUnit().setR(newR); //Set the unit that was inside the boat's row and column values to the new ones
+        map.getMap()[newR][newC].getUnit().setC(newC);
       } else {
         map.getMap()[unit.getR()][unit.getC()].setUnit(null); //Non-boat unit moving onto land
         map.getMap()[newR][newC].setUnit(unit);
+        unit.setR(newR); //Change the position of the unit in the unit object
+        unit.setC(newC);
       }
       for (int i = (newR - 1); i < (newR + 2); i++) {
           for (int j = (newC - 1); j < (newC + 2); j++) {
@@ -77,8 +86,6 @@ public class Interactions {
             }
           }
         }
-      unit.setR(newR); //Change the position of the unit in the unit object
-      unit.setC(newC);
       if (map.getMap()[newR][newC].getCity() != null) {
         if (map.getMap()[newR][newC].getCity().getTribe() != unit.getTribe()) {
           map.getMap()[newR][newC].getCity().setCapturing(true); //Set a city to being captured if a unit of a different tribe has gone on it
