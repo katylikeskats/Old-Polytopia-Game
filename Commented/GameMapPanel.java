@@ -1,0 +1,457 @@
+/**
+ * [GameMapPanel.java]
+ * This program is the graphics panel for the map display, which performs display of units, resources, tiles, on the map
+ * Authors: Katelyn Wang & Brian Li
+ * June 14 2018
+ */
+
+//Imports
+import javax.swing.JPanel;
+import java.awt.Toolkit;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Dimension;
+import java.awt.Color;
+
+//Mouse imports
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
+class GameMapPanel extends JPanel{
+
+    static int selectedR; //The row coordinate of the tile selected by the mouse
+    static int selectedC; //The column coordinate of the tile selected by the mouse
+    static int selectedR2; //The row coordinate of the tile selected by the mouse, for interactions where one object is first selected, which then interacts with another object/tile
+    static int selectedC2; //The column coordinate of the tile selected by the mouse, for interactions where one object is first selected, which then interacts with another object/tile
+
+    static boolean unitSelected; //Flag to mark whether a unit is being selected by the mouse
+    static boolean citySelected; //Flag to mark whether a city is being selected by the mouse
+    static boolean resourceSelected; //Flag to mark whether a resource is being selected by the mouse
+
+    static boolean resourceHarvest; //Flag to mark whether a resource is to be harvested
+    static boolean trainUnit; //Flag to mark whether a troop is to be trained
+    private static String trainUnitType; //Flag to mark the type of troop to be trained
+
+    private Map map; //Map object that stores the map's tiles, units, resources
+    private Space[][] tileMap; //The map of space objects (with units, resources, terrain) that is inside the map object
+    private Interactions interactions; //A handler object that handles object interactions, such as unit movement, resource harvesting, unit training, as well as validation of all of those interactions
+    static int tileDim; //Size of a tile (length)
+
+    boolean[][] playerMask; //Represents the tiles that are not in vision of the player
+    Player player; //The player whose version of the map is represented with this panel
+
+    private boolean unitMove; //Flag to mark whether a unit is to move (or attack)
+
+    //All image imports needed for display of the map
+    private static final Image redTarget = Toolkit.getDefaultToolkit().getImage("assets/RedTarget.png");
+    private static final Image greyTarget = Toolkit.getDefaultToolkit().getImage("assets/GreyTarget.png");
+    private static final Image grassImage = Toolkit.getDefaultToolkit().getImage("assets/Grass.png");
+    private static final Image waterImage = Toolkit.getDefaultToolkit().getImage("assets/Water.png");
+    private static final Image mountainImage = Toolkit.getDefaultToolkit().getImage("assets/Mountain.png");
+    private static final Image[] warrior = {Toolkit.getDefaultToolkit().getImage("assets/Warrior1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Warrior2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Warrior3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Warrior4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Warrior5.png")};
+    private static final Image[] swordsperson = {Toolkit.getDefaultToolkit().getImage("assets/Swordsperson1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Swordsperson2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Swordsperson3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Swordsperson4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Swordsperson5.png")};
+    private static final Image[] rider = {Toolkit.getDefaultToolkit().getImage("assets/Rider1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Rider2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Rider3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Rider4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Rider5.png")};
+    private static final Image[] knight = {Toolkit.getDefaultToolkit().getImage("assets/Knight1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Knight2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Knight3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Knight4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Knight5.png")};
+    private static final Image[] archer = {Toolkit.getDefaultToolkit().getImage("assets/Archer1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Archer2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Archer3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Archer4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Archer5.png")};
+    private static final Image[] catapult = {Toolkit.getDefaultToolkit().getImage("assets/Catapult1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Catapult2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Catapult3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Catapult4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Catapult5.png")};
+    private static final Image[] mindbender = {Toolkit.getDefaultToolkit().getImage("assets/Mindbender1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Mindbender2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Mindbender3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Mindbender4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Mindbender5.png")};
+    private static final Image[] ninja = {Toolkit.getDefaultToolkit().getImage("assets/Ninja1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Ninja2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Ninja3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Ninja4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Ninja5.png")};
+    private static final Image[] defender = {Toolkit.getDefaultToolkit().getImage("assets/Defender1.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Defender2.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Defender3.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Defender4.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/Defender5.png")};
+    private static final Image[][] boat = {
+            {Toolkit.getDefaultToolkit().getImage("assets/Boat11.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat12.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat13.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat14.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat15.png")},
+
+            {Toolkit.getDefaultToolkit().getImage("assets/Boat21.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat22.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat23.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat24.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat25.png")},
+
+            {Toolkit.getDefaultToolkit().getImage("assets/Boat31.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat32.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat33.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat34.png"),
+                    Toolkit.getDefaultToolkit().getImage("assets/Boat35.png")}};
+    private static final Image[] cityImage = {Toolkit.getDefaultToolkit().getImage("assets/AquarionCity.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/ImperiusCity.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/XinXiCity.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/OumanjiCity.png"),
+            Toolkit.getDefaultToolkit().getImage("assets/City.png"),};
+    private static final Image animalImage = Toolkit.getDefaultToolkit().getImage("assets/Animal.png");
+    private static final Image fishImage = Toolkit.getDefaultToolkit().getImage("assets/Fish.png");
+    private static final Image fruitImage = Toolkit.getDefaultToolkit().getImage("assets/Fruit.png");
+    private static final Image treeImage = Toolkit.getDefaultToolkit().getImage("assets/Tree.png");
+    private static final Image cropImage = Toolkit.getDefaultToolkit().getImage("assets/Crop.png");
+    private static final Image whaleImage = Toolkit.getDefaultToolkit().getImage("assets/Whale.png");
+    private static final Image starImage = Toolkit.getDefaultToolkit().getImage("assets/Star.png");
+    private static final Image cloudImage = Toolkit.getDefaultToolkit().getImage("assets/Cloud.png");
+
+    Color grey = new Color(100,100,100); //Custom grey colour
+
+    /**
+     *
+     * @param map
+     * @param height
+     * @param mask
+     * @param player
+     */
+    GameMapPanel(Map map, int height, boolean[][] mask, Player player) {
+        this.map = map;
+        interactions = new Interactions(map);
+        this.tileMap = map.getMap();
+
+        setSize(new Dimension(height, height));
+        tileDim = (height/tileMap.length);
+
+        MyMouseListener mouseListener = new MyMouseListener();
+        this.addMouseListener(mouseListener);
+
+        playerMask = mask;
+        this.player = player;
+
+    }
+
+    /**
+     *
+     * @param g
+     */
+    public void paintComponent(Graphics g) {
+        int currX = 1; //For later (like menu option shit)
+        int currY = 1; //For later
+        super.paintComponent(g); //required
+        setDoubleBuffered(true); //What is this
+
+        //Tile types
+        for (int i = 0; i < tileMap.length; i++) {
+            for (int j = 0; j < tileMap.length; j++) {
+                if (tileMap[i][j].getTerrain() instanceof Water) {
+                    g.drawImage(waterImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getTerrain() instanceof Grass) {
+                    g.drawImage(grassImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getTerrain() instanceof Mountain) {
+                    g.drawImage(mountainImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                }
+                if (tileMap[i][j].getCity() != null) {
+                    g.drawImage(cityImage[tileMap[i][j].getCity().getTribe()], (tileDim * j), (tileDim * i), tileDim, tileDim, this);
+                }
+            }
+        }
+
+        //Resources
+        for (int i = 0; i < tileMap.length; i++) {
+            for (int j = 0; j < tileMap.length; j++) {
+                if (tileMap[i][j].getResource() instanceof Fruit) {
+                    g.drawImage(fruitImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getResource() instanceof Crop) {
+                    g.drawImage(cropImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getResource() instanceof Fish) {
+                    g.drawImage(fishImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getResource() instanceof Forest) {
+                    g.drawImage(treeImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getResource() instanceof Animal) {
+                    g.drawImage(animalImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                } else if (tileMap[i][j].getResource() instanceof Whale) {
+                    g.drawImage(whaleImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                }
+            }
+        }
+
+        //Units
+        for (int row = 0; row < tileMap.length; row++) {
+            for (int col = 0; col < tileMap.length; col++) {
+                if (tileMap[row][col].getUnit() instanceof Warrior) {
+                    g.drawImage(warrior[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Swordsperson) {
+                    g.drawImage(swordsperson[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Rider) {
+                    g.drawImage(rider[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Knight) {
+                    g.drawImage(knight[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Archer) {
+                    g.drawImage(archer[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Catapult) {
+                    g.drawImage(catapult[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Mindbender) {
+                    g.drawImage(mindbender[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Defender) {
+                    g.drawImage(defender[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                } else if (tileMap[row][col].getUnit() instanceof Ninja) {
+                    g.drawImage(ninja[tileMap[row][col].getUnit().getTribe()], (tileDim * col), (tileDim * row), tileDim, tileDim, this);
+                }
+            }
+        }
+
+        //City pop/max unit num indicators
+        //Works for max populations UP TO 5 ONLY!!!!
+        for (int i = 0; i < tileMap.length; i++) {
+            for (int j = 0; j < tileMap.length; j++) {
+                if (tileMap[i][j].getCity() != null) {
+                    g.setColor(Color.BLACK);
+                    for (int a = 0; a < tileMap[i][j].getCity().getMaxPop(); a++) { //Display the boxes for population
+                        if (((tileMap[i][j].getCity().getMaxPop() == 3) && (a == 2)) || ((tileMap[i][j].getCity().getMaxPop() > 3) && (a == 3))) {
+                            g.drawRect((int)(((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+1, ((tileDim*(i+1))-(tileDim/5)), (int)(Math.round((double)(tileDim)/4))-1, (tileDim/5)+(tileDim/10));
+                        } else {
+                            g.drawRect((int)(((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4))), ((tileDim*(i+1))-(tileDim/5)), (int)(Math.round((double)(tileDim)/4)), (tileDim/5)+(tileDim/10));
+                        }
+                    }
+                    //g.drawRect((int)((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2)), ((tileDim*(i+1))-(tileDim/5)), (int)((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4)), ((tileDim/5)+(tileDim/10)));
+                    g.setColor(Color.BLUE);
+                    for (int a = 0; a < tileMap[i][j].getCity().getMaxPop(); a++) { //Display the current population (filled in bars)
+                        if (a >= tileMap[i][j].getCity().getCurrPop()) {
+                            g.setColor(grey);
+                        }
+                        if (((tileMap[i][j].getCity().getMaxPop() == 3) && (a == 2)) || ((tileMap[i][j].getCity().getMaxPop() > 3) && (a == 3))) {
+                            g.fillRect((int)(((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+2, ((tileDim*(i+1))-(tileDim/5))+1, (int)(Math.round((double)(tileDim)/4))-2, ((tileDim/5)+(tileDim/10))-1);
+                        } else {
+                            g.fillRect((int)(((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+1, ((tileDim*(i+1))-(tileDim/5))+1, (int)(Math.round((double)(tileDim)/4))-1, ((tileDim/5)+(tileDim/10))-1);
+                        }
+                    }
+                    g.setColor(Color.WHITE); //Draws white circles if they aren't on a blue filled rectangle
+                    for (int a = 0; a < tileMap[i][j].getCity().getCurrUnits(); a++) {
+                        if (a >= tileMap[i][j].getCity().getCurrPop()) {
+                            g.setColor(Color.BLACK); //If there are more units than there is current population, start drawing black circles (since the background will now be black)
+                        }
+                        g.fillOval((int)(((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))+(a*((double)(tileDim)/4)))+4, ((tileDim*(i+1))-(tileDim/5))+4, (int)(Math.round((double)(tileDim)/4))-8, ((tileDim/5)+(tileDim/10))-8);
+                    }
+                    if (tileMap[i][j].getCity().isCapital()) {
+                        g.drawImage(starImage, (int)((tileDim*j)+(tileDim/2)-(((double)(tileMap[i][j].getCity().getLevel()+1)*((double)(tileDim)/4))/2))-(int)(Math.round((double)(tileDim)/4)), ((tileDim*(i+1))-(tileDim/5)), (int)(Math.round((double)(tileDim)/4)), ((tileDim/5)+(tileDim/10)), this);
+                    }
+                }
+            }
+        }
+
+        //Cover stuff with mask
+        for (int i = 0; i < tileMap.length; i++) {
+            for (int j = 0; j < tileMap.length; j++) {
+                if (playerMask[i][j]) {
+                    g.drawImage(cloudImage, (tileDim*j), (tileDim*i), tileDim, tileDim, this);
+                }
+            }
+        }
+
+
+        //Display movement and attack targets for a selected unit
+        //Now the targets display, but only within the city?
+        if ((unitSelected) && !(tileMap[selectedR][selectedC].getUnit().getMoved())) { //If a unit is selected
+            for (int i = -(tileMap[selectedR][selectedC].getUnit().getMovement()); i <= tileMap[selectedR][selectedC].getUnit().getMovement(); i++){
+                for (int j = -(tileMap[selectedR][selectedC].getUnit().getMovement()); j <= tileMap[selectedR][selectedC].getUnit().getMovement(); j++) {
+                    if ((!((i == 0) && (j == 0))) && ((selectedR + i) >= 0) && ((selectedC + j) >= 0) && ((selectedR + i) < tileMap.length) && ((selectedC + j) < tileMap.length)) {
+                        if (interactions.validateMove(tileMap[selectedR][selectedC].getUnit(), selectedR + i, selectedC + j, player, playerMask)) {
+                            g.drawImage(greyTarget, (tileDim*(j + selectedC)), (tileDim*(i + selectedR)), tileDim, tileDim, this);
+                            //Ensure that if attacking another unit, and the another unit is killed, the unit defeating it cannot move onto the tile unless it has tech required
+                        } else if ((tileMap[selectedR + i][selectedC + j].getUnit() != null) && (interactions.validateAttack(tileMap[selectedR][selectedC].getUnit(), selectedR + i, selectedC + j, player))){
+                            g.drawImage(redTarget, (tileDim*(j + selectedC)), (tileDim*(i + selectedR)), tileDim, tileDim, this);
+                            //make it so it DOESNT DRAW RED TARGETS FOR FRIENDLY UNITS
+                        }
+                    }
+                }
+            }
+        }
+
+        if (unitSelected) {
+            //FOR UNIT OPTIONS DISPLAY (stats) if they've already moved
+        }
+
+        //UNIT MOVEMENT AND ATTACKING
+        if ((unitMove) && !(tileMap[selectedR][selectedC].getUnit().getMoved())) { //If the player selected the unit, then clicked on a different tile
+            //if the spot under newR, newC is a unit, validate attack with unit on selectedR, selectedC, and putting in selectedR2 and C2
+            if (tileMap[selectedR2][selectedC2].getUnit() != null) {
+                if (interactions.validateAttack(tileMap[selectedR][selectedC].getUnit(), selectedR2, selectedC2, player)) {
+                  //  tileMap[selectedR][selectedC].getUnit().setMoved(true); //Set the unit to having moved this turn
+                    interactions.attack(tileMap[selectedR][selectedC].getUnit(), tileMap[selectedR2][selectedC2].getUnit());
+                    if (tileMap[selectedR2][selectedC2].getUnit() == null) {
+                        if (interactions.validateMove(tileMap[selectedR][selectedC].getUnit(), selectedR2, selectedC2, player, playerMask)) {
+                            interactions.move(tileMap[selectedR][selectedC].getUnit(), selectedR2, selectedC2, playerMask); //Make the unit that just defeated another unit (if applicable) move onto that space
+                        }
+                    }
+                }
+            } else { //If the unit is to move (not attack)
+                if (interactions.validateMove(tileMap[selectedR][selectedC].getUnit(), selectedR2, selectedC2, player, playerMask)) {
+                   // tileMap[selectedR][selectedC].getUnit().setMoved(true); //Set the unit to having moved this turn
+                    interactions.move(tileMap[selectedR][selectedC].getUnit(), selectedR2, selectedC2, playerMask);
+                }
+                //}
+                //Else (no unit on newR, newC), validate move onto the new unit
+            }
+            //Reset these two after whatever is clicked on after unitMove is activated
+            unitSelected = false; //Reset to say no unit is selected if the above is false (cannot attack)
+            unitMove = false; //Reset to say no unit is going to be moved (attempted to) if above is false
+        } else if (unitMove) {
+            unitSelected = false;
+            unitMove = false;
+        }
+
+
+        if (trainUnit) {
+            interactions.trainUnit(player, trainUnitType, selectedR, selectedC);
+                trainUnit = false;
+                citySelected = false;
+                GameFrame.setDisplayOptions(false);
+            }
+
+
+        //If a resource is selected, and the button in the options panel was selected to confirm
+        if (resourceHarvest) {
+            if (interactions.harvestItem(player, selectedR, selectedC)) { //Check if the resource can be harvested (and harvest it if so)
+                resourceHarvest = false; //Set it so that no resource is selected/to be harvested if one was just harvested
+                resourceSelected = false;
+                GameFrame.setDisplayOptions(false); //Make the options panel disappear if a resource was just harvested
+            }
+        }
+
+    }
+
+
+
+    //Put in thing to ensure that they can click on neutral space
+    private class MyMouseListener implements MouseListener {
+
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        /**
+         *
+         * @param e
+         */
+        public void mousePressed(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            int option = 0;
+            if ((x <= tileDim * (tileMap.length)) && (x >= 0) && (y <= tileDim * (tileMap.length)) && (y >= 0)) {
+                if (unitSelected) {
+                    selectedR2 = (int) Math.floor((((double) y) ) / ((double) tileDim));
+                    selectedC2 = (int) Math.floor((((double) x) ) / ((double) tileDim));
+                } else {
+                    selectedR = (int) Math.floor((((double) y) ) / ((double) tileDim));
+                    selectedC = (int) Math.floor((((double) x) ) / ((double) tileDim));
+                }
+                option = interactions.displayOptions(selectedR, selectedC, selectedR2, selectedC2, unitSelected, playerMask);
+                System.out.println(option);
+                System.out.println(selectedR + ", " + selectedC);
+            }
+            if (option == 1) {
+                resourceSelected = false;
+                citySelected = false;
+                GameFrame.setDisplayOptions(false);
+                resourceHarvest = false;
+                trainUnit = false;
+
+                if (!unitSelected) {
+                    unitSelected = true;
+                }
+            } else if (option == 2) {
+                resourceSelected = false;
+                unitSelected = false;
+                GameFrame.setDisplayOptions(false);
+                OptionsPanel.showUnit = false;
+                OptionsPanel.showResource = false;
+                resourceHarvest = false;
+                trainUnit = false;
+
+                if (!citySelected){
+                    citySelected = true;
+                    GameFrame.setDisplayOptions(true);
+                    OptionsPanel.showUnit = true;
+
+                } else {
+                    citySelected = false;
+                }
+
+            } else if (option == 3) {
+                unitSelected = false;
+                citySelected = false;
+                GameFrame.setDisplayOptions(false);
+                OptionsPanel.showUnit = false;
+                OptionsPanel.showResource = false;
+                resourceHarvest = false;
+                trainUnit = false;
+
+                if (!resourceSelected) {
+                    resourceSelected = true; //Ok at least this part works
+                    GameFrame.setDisplayOptions(true);
+                    OptionsPanel.showResource = true;
+                } else {
+                    resourceSelected = false;
+                }
+            } else if (option == 4) {
+                unitMove = true;
+            } else if (option == 5) {
+                resourceSelected = false;
+                unitSelected = false;
+                citySelected = false;
+                resourceHarvest = false;
+                trainUnit = false;
+                GameFrame.setDisplayOptions(false);
+                OptionsPanel.showResource = true;
+            }
+
+        }
+
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+        }
+
+    } //end of mouselistener
+
+    /**
+     *
+     * @param bool
+     */
+    public static void setTrainUnit(boolean bool){
+        trainUnit = bool;
+    }
+
+    /**
+     *
+     * @param unitType
+     */
+    public static void setTrainUnitType(String unitType){
+        trainUnitType = unitType;
+    }
+
+}
