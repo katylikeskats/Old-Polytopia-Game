@@ -1,26 +1,31 @@
 /**
- *
+ * [Interactions.java]
+ * This program is an object that performs interactions between players and objects on the map (editing the map and its objects)
+ * Authors: Katelyn Wang & Brian Li
+ * Date: June 14, 2018
  */
 
 import java.util.ArrayList;
-
-//Removing units from cities once they die?
 
 public class Interactions {
     private Map map;
 
     /**
-     *
-     * @param map
+     * Instructions
+     * This constructor creats an interactions object with the map object so that it can edit the map object
+     * @param A map object that represents the game's map, containing the map of space objects that hold units, resources, cities, terrain
+     * @return nothing
      */
     public Interactions(Map map){
         this.map = map;
     }
 
     /**
-     *
-     * @param attacker
-     * @param defender
+     * attack
+     * This method edits units' health based on the damage calculation between two units, and possibly edits a unit's kill count and removes 
+     *   a dead unit if it is killed by another unit in the interaction
+     * @param A unit object representing the unit performing the attack
+     * @param unit object representing the unit defending against the attack (and possibly counter-attacking)
      */
     public void attack(Unit attacker, Unit defender) {
         defender.setCurrHealth(defender.getCurrHealth() - attacker.getDamage(defender)); //Calculate damage done to the defender
