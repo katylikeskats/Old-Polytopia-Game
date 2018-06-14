@@ -1,7 +1,7 @@
 /**
  * [Player.java]
- *
- * @author
+ * This program (player object) represents a player that is in a game of Polytopia
+ * Authors: Katelyn Wang & Brian Li
  * June 14 2018
  */
 
@@ -10,67 +10,64 @@ import java.util.ArrayList;
 import java.util.Iterator; //When does the iterator reset to start
 
 public class Player {
-    private String name;
-    private int tribe;
-    private int currency;
-    private ArrayList<String> technology = new ArrayList<String>();
-    private ArrayList<String> practical = new ArrayList<String>();
-    private ArrayList<City> cities = new ArrayList<City>();
-    protected Iterator<City> itr = cities.iterator();
+    private String name; //Player's name
+    private int tribe; //Player's tribe
+    private int currency; //Amount of currency (stars) that the player has
+    private ArrayList<String> technology = new ArrayList<String>(); //The technology (names in relation to the tech tree) that the player has
+    private ArrayList<String> practical = new ArrayList<String>(); //The technology (names in relation to corresponding class names) that the player has
+    private ArrayList<City> cities = new ArrayList<City>(); //Cities that the player has under their control
 
-    private Interactions interaction;
-    private boolean unitSelected;
-    private boolean resourceSelected;
-    private boolean citySelected;
-    private boolean landSelected;
-    private boolean confirmAction;
-    private boolean turnEnd = false;
-    private int selMapRow;
-    private int selMapCol;
+    private Interactions interaction; //
+    private boolean unitSelected; //
+    private boolean resourceSelected; //
+    private boolean citySelected; //
+    private boolean landSelected; //
+    private boolean confirmAction; //
+    private boolean turnEnd = false; //Flag indicating whether the player's turn has ended (for the turn method)
+    private int selMapRow; //Row coordinate of the tile selected
+    private int selMapCol; //Column coordinate of the tile selected
+ 
+    private int numCities = 1; //Number of cities the player has under their control
+    private int tierOneCost; //Currency cost of purchasing a tier one technology
+    private int tierTwoCost; //Currency cost of purchasing a tier two technology
 
-    private int numCities = 1;
-    private int tierOneCost;
-    private int tierTwoCost;
-
-    boolean[][] mask;
-    private Interactions handler;
+    boolean[][] mask; //The masked area that the player cannot see
+    private Interactions handler; //Interactions object to perform map interactions in-game
 
     /**
-     *
-     * @param city
-     * @param tribe
-     * @param interaction
-     * @param mapLength
-     * @param name
+     * Player
+     * This constructor creates a player object with the designed city, interactions object, length of the map, and name of the player
+     * @param A city object representing the first city (capital city) of the player (city)
+     * @param An integer representing the player's tribe (tribe)
+     * @param An interactions object to perform map interactions (interaction)
+     * @param An integer to represent the length of the map (mapLength)
+     * @param A string to represent the player's inputted name (name)
      */
     public Player(City city, int tribe, Interactions interaction, int mapLength, String name) {
-        this.tribe = tribe;
-        this.interaction = interaction;
-        this.name = name;
-        cities.add(city);
-        mask = new boolean[mapLength][mapLength];
+        this.tribe = tribe; //Set tribe
+        this.interaction = interaction; //Set interactions object
+        this.name = name; //Set player name
+        cities.add(city); //Add the capital city
+        mask = new boolean[mapLength][mapLength]; //Set the player's mask to the specified size
 
         //initialize the map to cover most of the map
         for (int i = 0; i < mapLength; i++) {
             for (int j = 0; j < mapLength; j++) {
                 if ((Math.abs(i - city.getRow()) < 3) && (Math.abs(j - city.getCol()) < 3)) {
-                    mask[i][j] = false;
+                    mask[i][j] = false; //Set the mask to false (not concealed) if within range of the player's capital city
                 } else {
-                    mask[i][j] = true;
+                    mask[i][j] = true; //Set the mask to true (visible) elsewhere
                 }
             }
         }
 
-        currency = 5;
-        tierOneCost = 5;
-        tierTwoCost = 7;
+        currency = 5; //Set the player's initial currency to 5 at the start of the game
+        tierOneCost = 5; //Set the cost of tier one technology to 5 currency units (stars)
+        tierTwoCost = 7; //Set the cost of tier two technology to 7 currency units (stars)
 
-        //city.setCurrUnits(1);
-        //System.out.println(interaction.trainUnit(this, "Warrior", city.getRow(), city.getCol()));
-
-       addPractical("Grass");
-       addPractical("Warrior");
-       addTechnology("StartingTech");
+       addPractical("Grass"); //Make all players capable of moving their units on grass
+       addPractical("Warrior"); //Make all players capable of training warriors
+       addTechnology("StartingTech"); //Give players the starting technology
 
     }
 
@@ -238,18 +235,21 @@ public class Player {
     }
 
     /**
-     *
-     * @param numCities
+     * setNumCities
+     * This method sets the number of cities under the player's control
+     * @param numCities, an integer representing the number of cities
+     * @return nothing
      */
     public void setNumCities(int numCities){
-        this.numCities = numCities;
+        this.numCities = numCities; //Set the number of cities
     }
 
     /**
-     *
-     * @return
+     * getNumCities
+     * This method returns the number of cities under the player's control
+     * @return numCities, the number of cities the player has
      */
     public int getNumCities(){
-        return this.numCities;
+        return this.numCities; //Return the number of cities
     }
 }
